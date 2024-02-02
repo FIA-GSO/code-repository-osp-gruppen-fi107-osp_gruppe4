@@ -12,14 +12,15 @@ body {
   
   a {
     text-decoration: none;
-    color: #000;
+    color: #000000;
   }
   
   /* Header */
   
   header {
-    background-color: #fff;
-    border-bottom: 1px solid #ccc;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f7f5f5;
+    margin-bottom: 200px;
   }
   
   .logo {
@@ -40,27 +41,46 @@ body {
   
   main {
     padding: 20px;
+    display: grid;
+    
   }
   
   .gruppen-uebersicht {
-    border: 1px solid #ccc;
+    border: 1px solid #000dff;
     padding: 20px;
   }
   
-  .gruppe {
+  .gruppe1 {
     margin-bottom: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #3200fa;
+    background-color: #3200fa;
     padding: 10px;
   }
   
-  .gruppen-bild {
-    float: left;
-    width: 100px;
-    height: 100px;
+  .gruppe2 {
+    margin-bottom: 20px;
+    border: 1px solid #3200fa;
+    background-color: #3200fa;
+    padding: 10px;
   }
-  
+
+  .gruppe3 {
+    margin-bottom: 20px;
+    border: 1px solid #3200fa;
+    background-color: #3200fa;
+    padding: 10px;
+  }
+
+  .gruppe4 {
+    margin-bottom: 20px;
+    border: 1px solid #3200fa;
+    background-color: #3200fa;
+    padding: 10px;
+  }
+
   .gruppen-info {
     margin-left: 120px;
+     color: #f7f7f7;
   }
   
   .gruppen-info h3 {
@@ -72,8 +92,8 @@ body {
   }
   
   .gruppen-info button {
-    background-color: #000;
-    color: #fff;
+    background-color: #dad5d5;
+    color: #0b0a0a;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
@@ -82,8 +102,11 @@ body {
   /* Footer */
   
   footer {
-    background-color: #ccc;
+    background-color: #ffffff;
     text-align: center;
     padding: 10px;
   }
+  
+
+
   

@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../CSS/dashboard.css">
   <title>LBV - Gruppen</title>
-
+  <style>
+ 
+  </style>
 </head>
 <body>
   <header>
@@ -15,10 +17,16 @@
     <nav>
       <a href="#">Alle Gruppen</a>
       <a href="#">Meine Gruppen</a>
-      <div class="profile-circle">
-        <img src="../Views/instance/default_profile_picture.jpg" alt="Profile Image">
+      <div class="profile-wrapper">
+        <div class="profile-circle" onclick="toggleDropdown()">
+          <img src="../Views/instance/default_profile_picture.jpg" alt="Profile Image">
+        </div>
+        <div class="dropdown" id="dropdown">
+          <a href="#">Profil</a>
+          <a href="#">Einstellungen</a>
+          <a href="#">Ausloggen</a>
+        </div>
       </div>
-      <a href="#">Profil</a>
     </nav>
   </header>
   <main>
@@ -39,11 +47,65 @@
           <button>Beitreten</button>
         </div>
       </div>
+      <div class="gruppen-info">
+        <div class="gruppe1">
+          <h3>Gruppenname 1</h3>
+          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
+          <p>Nutzer: 12/20</p>
+          <button>Beitreten</button>
+        </div>
+      </div>
+      <div class="gruppen-info">
+        <div class="gruppe2">
+          <h3>Gruppenname 2</h3>
+          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
+          <p>Nutzer: 8/15</p>
+          <button>Beitreten</button>
+        </div>
+      </div>
+      <div class="gruppen-info">
+        <div class="gruppe8">
+          <h3>Gruppenname 1</h3>
+          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
+          <p>Nutzer: 12/20</p>
+          <button>Beitreten</button>
+        </div>
+      </div>
+      <div class="gruppen-info">
+        <div class="gruppe7">
+          <h3>Gruppenname 2</h3>
+          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
+          <p>Nutzer: 8/15</p>
+          <button>Beitreten</button>
+        </div>
+      </div>
+      <div class="gruppen-info">
+        <div class="gruppe5">
+          <h3>Gruppenname 1</h3>
+          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
+          <p>Nutzer: 12/20</p>
+          <button>Beitreten</button>
+        </div>
+      </div>
+      <div class="gruppen-info">
+        <div class="gruppe6">
+          <h3>Gruppenname 2</h3>
+          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
+          <p>Nutzer: 8/15</p>
+          <button>Beitreten</button>
+        </div>
+      </div>
       <!-- Weitere Gruppeninfo-Elemente -->
     </div>
   </main>
   <footer>
     <p>Impressum</p>
   </footer>
+  <script>
+    function toggleDropdown() {
+      var dropdown = document.getElementById('dropdown');
+      dropdown.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>

@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../CSS/dashboard.css">
+  <link rel="icon" type="image/png" href="instance/Screenshot 2024-02-02 095135.png">
   <title>LBV - Gruppen</title>
-  <style>
- 
-  </style>
 </head>
 <body>
   <header>
@@ -15,6 +13,7 @@
       <img src="../Views/instance/Screenshot 2024-02-02 095135.png" alt="LBV Logo">
     </div>
     <nav>
+      <a href="createGroup.html" class="create-group-btn">Neue Gruppe erstellen</a>
       <a href="#">Alle Gruppen</a>
       <a href="#">Meine Gruppen</a>
       <div class="profile-wrapper">
@@ -30,72 +29,8 @@
     </nav>
   </header>
   <main>
-    <div class="gruppen-container">
-      <div class="gruppen-info">
-        <div class="gruppe1">
-          <h3>Gruppenname 1</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 12/20</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe2">
-          <h3>Gruppenname 2</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 8/15</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe1">
-          <h3>Gruppenname 1</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 12/20</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe2">
-          <h3>Gruppenname 2</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 8/15</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe8">
-          <h3>Gruppenname 1</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 12/20</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe7">
-          <h3>Gruppenname 2</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 8/15</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe5">
-          <h3>Gruppenname 1</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 12/20</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <div class="gruppen-info">
-        <div class="gruppe6">
-          <h3>Gruppenname 2</h3>
-          <p>Beschreibung der Gruppe. Hier kann eine kurze Beschreibung stehen, um den Zweck der Gruppe zu erklären.</p>
-          <p>Nutzer: 8/15</p>
-          <button>Beitreten</button>
-        </div>
-      </div>
-      <!-- Weitere Gruppeninfo-Elemente -->
+    <div class="gruppen-container" id="gruppen-container">
+      <!-- Hier werden die Gruppen dynamisch eingefügt -->
     </div>
   </main>
   <footer>
@@ -106,6 +41,42 @@
       var dropdown = document.getElementById('dropdown');
       dropdown.classList.toggle('active');
     }
+
+    // JavaScript Funktion zum Anzeigen der Gruppen
+    function anzeigenGruppen() {
+      // Hier werden die Gruppen aus dem Local Storage oder einer anderen Datenquelle abgerufen
+      var gespeicherteGruppen = JSON.parse(localStorage.getItem("gruppen")) || [];
+
+      var gruppenContainer = document.getElementById("gruppen-container");
+
+      // Alle vorherigen Inhalte im Container entfernen
+      gruppenContainer.innerHTML = "";
+
+      // Durchlaufe die Gruppen und füge sie dem Container hinzu
+      gespeicherteGruppen.forEach(function(gruppe) {
+        var gruppenInfo = document.createElement("div");
+        gruppenInfo.classList.add("gruppen-info");
+
+        var heading = document.createElement("h3");
+        heading.textContent = gruppe.name;
+
+        var beschreibung = document.createElement("p");
+        beschreibung.textContent = gruppe.beschreibung;
+
+        var nutzer = document.createElement("p");
+        nutzer.textContent = "Nutzer: " + gruppe.nutzer;
+
+        gruppenInfo.appendChild(heading);
+        gruppenInfo.appendChild(beschreibung);
+        gruppenInfo.appendChild(nutzer);
+
+        gruppenContainer.appendChild(gruppenInfo);
+      });
+    }
+
+    
+    // Die Funktion wird aufgerufen, sobald die Seite geladen ist
+    window.onload = anzeigenGruppen();
   </script>
 </body>
 </html>

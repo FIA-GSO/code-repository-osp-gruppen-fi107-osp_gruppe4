@@ -1,0 +1,278 @@
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    overflow-y: auto
+  }
+
+  header {
+    background-color: #fcfcfc;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo img {
+    width: 150px;
+  }
+
+  nav {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
+    color: #000000;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  .profile-wrapper {
+    position: relative;
+  }
+
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .profile-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: none;
+  }
+
+  .dropdown.active {
+    display: block;
+  }
+
+  .dropdown a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 5px 0;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .button-container {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .button-container:hover {
+    background-color: #0056b3;
+  }
+
+  .neue-gruppe h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .neue-gruppe label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .neue-gruppe input[type="text"],
+  .neue-gruppe textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+
+  .neue-gruppe {
+    width: 100%;
+  }
+  
+  .gruppen-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .gruppen-info {
+    width: calc(50% - 20px); /* Anpassen der Breite */
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #39adf0;
+    border: 1px solid #727272;
+    border-radius: 5px;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+  
+  .gruppen-info button:hover {
+    background-color: #555;
+  }
+
+  .delete-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .gruppen-info h3 {
+    font-size: 20px;
+    margin-top: 0;
+  }
+  .gruppen-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .gruppen-info button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .button-container button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 10px;
+    z-index: 1; /* Hier wird der z-Index hinzugefügt */
+  }
+
+  .button-container button:hover {
+    background-color: #0056b3;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed; /* Positionierung auf fixed ändern */
+    width: 100%;
+    bottom: 0; /* Fußzeile am unteren Bildschirmrand positionieren */
+  }
+  .gruppen-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px; /* Fügen Sie etwas Abstand zwischen dem Header und den Gruppen hinzu */
+  }
+  .neue-gruppe {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .neue-gruppe label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .neue-gruppe input[type="text"],
+  .neue-gruppe textarea,
+  .neue-gruppe select {
+    width: calc(100% - 20px);
+    max-width: 400px; /* Maximale Breite festlegen */
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  
+  .neue-gruppe input[type="text"],
+  .neue-gruppe textarea {
+    margin-left: auto; /* Zentrieren der Eingabefelder */
+    margin-right: auto; /* Zentrieren der Eingabefelder */
+  }
+  
+  .neue-gruppe select {
+    width: 100%; /* Vollständige Breite für Select-Feld */
+  }
+
+.neue-gruppe select {
+  width: 100%; /* Vollständige Breite für Select-Feld */
+}
+  
+  /* Styles für jede einzelne Gruppe */
+  .gruppen-info {
+    width: calc(50% - 20px); /* Halbe Breite des Containers minus Abstand */
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #39adf0;
+    border: 1px solid #727272;
+    border-radius: 5px;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Fügen Sie einen Schatten hinzu, um die Gruppen hervorzuheben */
+  }
+  
+  /* Überschrift */
+  .gruppen-info h3 {
+    font-size: 20px;
+    margin-top: 0;
+    color: #fff; /* Ändern Sie die Farbe der Überschrift in Weiß */
+  }
+  
+  /* Beschreibung */
+  .gruppen-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #fff; /* Ändern Sie die Farbe des Texts in Weiß */
+  }
+  

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../CSS/createGroup.css">
+  <link rel="icon" type="image/png" href="instance/Screenshot 2024-02-02 095135.png">
+  <title>LBV - Gruppen</title>
+  <style>
+    /* Hier können Sie zusätzliche CSS-Stile hinzufügen, falls erforderlich */
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="../Views/instance/Screenshot 2024-02-02 095135.png" alt="LBV Logo">
+    </div>
+    <nav>
+      <a href="Homepage.html">Alle Gruppen</a>
+      <a href="#">Meine Gruppen</a>
+      <div class="profile-wrapper">
+        <div class="profile-circle" onclick="toggleDropdown()">
+          <img src="../Views/instance/default_profile_picture.jpg" alt="Profile Image">
+        </div>
+        <div class="dropdown" id="dropdown">
+          <a href="#">Profil</a>
+          <a href="#">Einstellungen</a>
+          <a href="login.html">Ausloggen</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="gruppen-container" id="gruppen-container">
+      <!-- Hier werden die dynamisch erstellten Gruppen eingefügt -->
+    </div>
+    <div class="neue-gruppe">
+      <h2>Neue Gruppe erstellen</h2>
+      <input type="text" id="gruppenname" placeholder="Gruppenname">
+      <textarea id="beschreibung" placeholder="Beschreibung"></textarea>
+      <input type="number" id="maxMitglieder" placeholder="Maximale Anzahl der Mitglieder">
+    </div>
+    <!-- Buttons "Gruppe erstellen" und "Zurück zur Übersicht" -->
+    <div class="button-container">
+      <button onclick="neueGruppeErstellen()">Gruppe erstellen</button>
+    </div>
+  </main>
+  <footer>
+    <p>Impressum</p>
+  </footer>
+    <script>
+      function anzeigenGruppen() {
+        var gespeicherteGruppen = JSON.parse(localStorage.getItem("gruppen")) || [];
+        var gruppenContainer = document.getElementById("gruppen-container");
+        gruppenContainer.innerHTML = "";
+      
+        gespeicherteGruppen.forEach(function(gruppe, index) {
+          var gruppenInfo = document.createElement("div");
+          gruppenInfo.classList.add("gruppen-info");
+      
+          var heading = document.createElement("h3");
+          heading.textContent = gruppe.name;
+      
+          var beschreibung = document.createElement("p");
+          beschreibung.textContent = gruppe.beschreibung;
+      
+          var nutzer = document.createElement("p");
+          nutzer.textContent = "Nutzer: " + gruppe.nutzer;
+      
+          // Erstellen des Lösch-Buttons für jede Gruppe
+          var deleteButton = document.createElement("button");
+          deleteButton.classList.add("delete-button");
+          deleteButton.textContent = "L";
+          deleteButton.onclick = function() {
+            deleteGruppe(index);
+          };
+      
+          gruppenInfo.appendChild(heading);
+          gruppenInfo.appendChild(beschreibung);
+          gruppenInfo.appendChild(nutzer);
+          gruppenInfo.appendChild(deleteButton); // Hinzufügen des Lösch-Buttons zur Gruppe
+          gruppenContainer.appendChild(gruppenInfo);
+        });
+      }
+      function deleteGroup() {
+        var groupIndex = 0; // Index der zu löschenden Gruppe
+        // Hier können Sie den Index der zu löschenden Gruppe festlegen, beispielsweise durch eine Benutzerinteraktion oder andere Logik.
+        
+        // Lade die gespeicherten Gruppen aus dem Local Storage
+        var savedGroups = JSON.parse(localStorage.getItem("gruppen")) || [];
+        
+        // Überprüfe, ob der Index gültig ist
+        if (groupIndex >= 0 && groupIndex < savedGroups.length) {
+          // Entferne die Gruppe aus der Liste
+          savedGroups.splice(groupIndex, 1);
+          
+          // Speichere die aktualisierte Liste der Gruppen im Local Storage
+          localStorage.setItem("gruppen", JSON.stringify(savedGroups));
+          
+          // Aktualisiere die Anzeige der Gruppen
+          anzeigenGruppen();
+        } else {
+          alert("Ungültiger Gruppenindex.");
+        }
+      }
+
+      function deleteGruppe(index) {
+        var gespeicherteGruppen = JSON.parse(localStorage.getItem("gruppen")) || [];
+        gespeicherteGruppen.splice(index, 1);
+        localStorage.setItem("gruppen", JSON.stringify(gespeicherteGruppen));
+        anzeigenGruppen();
+      }
+
+      function neueGruppeErstellen() {
+        var gruppennameInput = document.getElementById("gruppenname");
+        var beschreibungInput = document.getElementById("beschreibung");
+        var maxMitgliederInput = document.getElementById("maxMitglieder");
+      
+        var gruppenname = gruppennameInput.value.trim();
+        var beschreibung = beschreibungInput.value.trim();
+        var maxMitglieder = parseInt(maxMitgliederInput.value);
+      
+        if (gruppenname !== "" && beschreibung !== "" && !isNaN(maxMitglieder) && maxMitglieder > 0) {
+          var neueGruppe = {
+            name: gruppenname,
+            beschreibung: beschreibung,
+            maxMitglieder: maxMitglieder,
+            mitglieder: [getLoggedInUser()] // Füge den Ersteller als erstes Mitglied hinzu
+          };
+      
+          var gespeicherteGruppen = JSON.parse(localStorage.getItem("gruppen")) || [];
+      
+          gespeicherteGruppen.push(neueGruppe);
+      
+          localStorage.setItem("gruppen", JSON.stringify(gespeicherteGruppen));
+      
+          anzeigenGruppen();
+      
+          gruppennameInput.value = "";
+          beschreibungInput.value = "";
+          maxMitgliederInput.value = "";
+        } else {
+          alert("Bitte füllen Sie alle Felder aus und geben Sie eine gültige maximale Anzahl von Mitgliedern an.");
+        }
+      }
+      function zurueckZurUebersicht() {
+        window.location.href = "Homepage.html";
+      }
+
+      function createGruppen() {
+        var gespeicherteGruppen = JSON.parse(localStorage.getItem("gruppen")) || [];
+        var gruppenContainer = document.getElementById("gruppen-container");
+        gruppenContainer.innerHTML = "";
+
+        gespeicherteGruppen.forEach(function(gruppe, index) {
+          var gruppenInfo = document.createElement("div");
+          gruppenInfo.classList.add("gruppen-info");
+
+          var heading = document.createElement("h3");
+          heading.textContent = gruppe.name;
+
+          var beschreibung = document.createElement("p");
+          beschreibung.textContent = gruppe.beschreibung;
+
+          var nutzer = document.createElement("p");
+          nutzer.textContent = "Nutzer: " + gruppe.nutzer;
+
+          gruppenInfo.appendChild(heading);
+          gruppenInfo.appendChild(beschreibung);
+          gruppenInfo.appendChild(nutzer);
+
+          gruppenContainer.appendChild(gruppenInfo);
+        });
+      }
+
+      window.onload = function() {
+        createGruppen();
+        anzeigenGruppen();
+      }
+
+      function toggleDropdown() {
+        var dropdown = document.getElementById('dropdown');
+        dropdown.classList.toggle('active');
+      }
+      function getLoggedInUser() {
+        // Hier können Sie die Logik implementieren, um den angemeldeten Benutzer zu erhalten
+        // Zum Beispiel können Sie den Benutzer aus dem Local Storage oder aus einer globalen Variable abrufen
+        // Für dieses Beispiel geben wir einfach einen Standardbenutzer zurück
+        return "StandardBenutzer";
+      }
+
+      // Löschen-Button für Gruppen
+      var deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-button");
+      deleteButton.textContent = "L";
+      deleteButton.onclick = function() {
+        deleteGruppe(this);
+      };
+      document.body.appendChild(deleteButton);
+  
+    </script>
+  </body>
+  </html>

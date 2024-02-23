@@ -5,32 +5,6 @@
       background-color: #f4f4f4;
     }
 
-    header {
-      background-color: #fcfcfc;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo img {
-      width: 150px;
-    }
-
-    nav {
-      margin-top: 20px;
-    }
-    
-    nav a {
-      color: #000000;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
     main {
       padding: 20px;
     }

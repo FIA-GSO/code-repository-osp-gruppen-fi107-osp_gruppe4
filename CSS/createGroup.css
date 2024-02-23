@@ -1,82 +1,4 @@
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    overflow-y: auto
-  }
-
-  header {
-    background-color: #fcfcfc;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo img {
-    width: 150px;
-  }
-
-  nav {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-  }
-
-  nav a {
-    color: #000000;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-
-  nav a:hover {
-    text-decoration: underline;
-  }
-
-  .profile-wrapper {
-    position: relative;
-  }
-
-  .profile-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-  }
-
-  .profile-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .dropdown {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    display: none;
-  }
-
-  .dropdown.active {
-    display: block;
-  }
-
-  .dropdown a {
-    display: block;
-    color: #333;
-    text-decoration: none;
-    padding: 5px 0;
-  }
-
-  main {
+   main {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -141,12 +63,6 @@
     background-color: #555;
   }
 
-  .delete-button {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-  }
-
   .gruppen-info h3 {
     font-size: 20px;
     margin-top: 0;
@@ -178,11 +94,6 @@
     width: 100%;
     bottom: 0;
   }
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
   .button-container button {
     background-color: #007bff;
     color: #fff;
@@ -198,15 +109,6 @@
     background-color: #0056b3;
   }
 
-  footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    position: fixed; /* Positionierung auf fixed ändern */
-    width: 100%;
-    bottom: 0; /* Fußzeile am unteren Bildschirmrand positionieren */
-  }
   .gruppen-container {
     display: flex;
     flex-wrap: wrap;
@@ -232,21 +134,18 @@
     padding: 10px;
     box-sizing: border-box;
     margin-bottom: 20px;
-  }
-  
-  .neue-gruppe input[type="text"],
-  .neue-gruppe textarea {
     margin-left: auto; /* Zentrieren der Eingabefelder */
     margin-right: auto; /* Zentrieren der Eingabefelder */
   }
   
+ 
   .neue-gruppe select {
     width: 100%; /* Vollständige Breite für Select-Feld */
   }
 
-.neue-gruppe select {
+  .neue-gruppe select {
   width: 100%; /* Vollständige Breite für Select-Feld */
-}
+  }
   
   /* Styles für jede einzelne Gruppe */
   .gruppen-info {

@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    overflow-y: auto
+  }
+
+  header {
+    background-color: #fcfcfc;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo img {
+    width: 70px;
+  }
+
+  nav {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  nav a {
+    color: #000000;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  .profile-wrapper {
+    position: relative;
+  }
+
+  .profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .profile-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    display: none;
+  }
+
+  .dropdown.active {
+    display: block;
+  }
+
+  .dropdown a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 5px 0;
+  }
+  .impressum{
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }

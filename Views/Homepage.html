@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../CSS/dashboard.css">
+  <link rel="stylesheet" href="../CSS/HeaderFooter.css">
   <link rel="icon" type="image/png" href="instance/Screenshot 2024-02-02 095135.png">
   <title>LBV - Gruppen</title>
 </head>
@@ -34,7 +35,7 @@
     </div>
   </main>
   <footer>
-    <p>Impressum</p>
+    <button class="delete-button" id="deleteButton" onclick="window.location.href='impressum.html'">Impressum</button>
   </footer>
   <script>
     function toggleDropdown() {
@@ -43,7 +44,7 @@
     }
 
     // JavaScript Funktion zum Anzeigen der Gruppen
-    function anzeigenGruppen() {
+   async function anzeigenGruppen() {
       // Hier werden die Gruppen aus dem Local Storage oder einer anderen Datenquelle abgerufen
       var gespeicherteGruppen = JSON.parse(localStorage.getItem("gruppen")) || [];
 

@@ -1,24 +1,33 @@
+const userData = JSON.parse(localStorage.getItem('currentUser'));
+const BenutzerID = userData.benutzerId;
+const Vorname = userData.Vorname;
+const EMail = userData.email;
+const Admin = userData.admin;
+const JWTToken = userData.jwttoken;
+
+
+
 async function beitreten() {
     console.log('in der funktion')
     const fetch = require('node-fetch');
 
     // Constants
-    const BASE_URL = "http://127.0.0.1:5000";
+    const BASE_URL = "https://lbv.digital";
     const OWNER_CREDENTIALS = {"email": "test", "password": "test"};
     const GROUP_ID = 14; // Group ID for testing
     
     // Function to get JWT token
-    async function getJwtToken(credentials) {
-        const response = await fetch(`${BASE_URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(credentials)
-        });
-        const data = await response.json();
-        return data.access_token;
-    }
+//    async function getJwtToken(credentials) {
+//        const response = await fetch(`${BASE_URL}/login`, {
+//            method: 'POST',
+//            headers: {
+//                'Content-Type': 'application/json'
+//            },
+//            body: JSON.stringify(credentials)
+//        });
+//        const data = await response.json();
+//        return data.access_token;
+//    }
     
     // Function to add a user to a group
     async function addUserToGroup(token, userId, groupId) {
@@ -28,7 +37,7 @@ async function beitreten() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...headers
+                headers
             },
             body: JSON.stringify(data)
         });

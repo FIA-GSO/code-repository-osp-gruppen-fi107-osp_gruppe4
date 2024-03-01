@@ -1,99 +1,123 @@
 document.addEventListener('DOMContentLoaded', () => {
 //const userData = JSON.parse(localStorage.getItem('currentUser'));
-const token = JSON.parse(localStorage.getItem('jwtToken'));
-//const BenutzerID = userData.benutzerId;
+var jwtToken = localStorage.getItem('jwtToken');
+            if (!jwtToken) {
+                throw new Error('JwtToken nicht gefunden im Local Storage');
+            }
+//console.log(token)
+//const userID = userData.benutzerId;
 //const Vorname = userData.Vorname;
 //const EMail = userData.email;
 //const Admin = userData.admin;
-const JWTToken = token.jwttoken;
-//const BASE_URL = "https://lbv.digital";
-const BASE_URL = "http://127.0.0.1:5000";
-const auth = {'Authorization': `Bearer ${JWTToken}`};
+const BASE_URL = "https://lbv.digital";
+
+const auth = {'Authorization': `Bearer ${jwtToken}`};
 
 // Alle Gruppen auslesen und auf der Webseite anzeigen
 
-const fetch = require('node-fetch');
+
+//const fetch = require('node-fetch');
 fetch(`${BASE_URL}/groups`,{
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
         auth 
-    },
-    body: JSON.stringify({
-        groupID: groupID,
-        ownerID: ownerID,
-        title: title,
-        description: description,
-        maxUsers: maxUsers
-    })
+    }
     })
     .then(response => {
         if (response.ok) {
-            var alleGruppen = response.json();
-            alleGruppen.forEach(function(gruppe, index) {
-                var gruppenInfo = document.createElement("div");
-                gruppenInfo.classList.add("gruppen-info");
-            
-                var heading = document.createElement("h3");
-                heading.textContent = gruppe.name;
-            
-                var beschreibung = document.createElement("p");
-                beschreibung.textContent = gruppe.beschreibung;
-            
-                var nutzer = document.createElement("p");
-                nutzer.textContent = "Nutzer: " + gruppe.nutzer;
-            
-                // Erstellen des Lösch-Buttons für jede Gruppe
-                var deleteButton = document.createElement("button");
-                deleteButton.classList.add("delete-button");
-                deleteButton.textContent = "L";
-                deleteButton.onclick = function() {
-                  deleteGruppe(index);
-                };
-            
-                gruppenInfo.appendChild(heading);
-                gruppenInfo.appendChild(beschreibung);
-                gruppenInfo.appendChild(nutzer);
-                gruppenInfo.appendChild(deleteButton); // Hinzufügen des Lösch-Buttons zur Gruppe
-                gruppenContainer.appendChild(gruppenInfo);
-              });
-        //    return response.json();
+         //   console.log(response.json())
+           
+            return response.json();
         } else {
             throw new Error('Gruppen konnten nicht gelesen werden.');
         }
     })
+    .then(data => {
+        var alleGruppen = data;
+        console.log(data)
+        const container = document.getElementById('gruppen-container');
+        alleGruppen.forEach(function(gruppe) {
+            var gruppenInfo = document.createElement("div");
+            gruppenInfo.classList.add("gruppen-info");
+        
+            var heading = document.createElement("h3");
+            heading.textContent = gruppe.title;
+        
+            var beschreibung = document.createElement("p");
+            beschreibung.textContent = gruppe.description;
+        
+            var nutzer = document.createElement("p");
+            nutzer.textContent = "MaxNutzer: " + gruppe.maxUsers;
+        
+            // Erstellen des Beitreten-Buttons für jede Gruppe
+            var BeitretenButton = document.createElement("button");
+            BeitretenButton.classList.add("delete-button");
+            BeitretenButton.textContent = "Beitreten";
+            BeitretenButton.addEventListener('click', () => {
+                console.log('angeklickt')
+                joinGroup(gruppe.groupID, auth);
+            })
+        
+            gruppenInfo.appendChild(heading);
+            gruppenInfo.appendChild(beschreibung);
+            gruppenInfo.appendChild(nutzer);
+            gruppenInfo.appendChild(BeitretenButton); // Hinzufügen des Lösch-Buttons zur Gruppe
+            container.appendChild(gruppenInfo);
+          });
+    })
 
-
-// In Gruppe beitreten
-let beitreten_button = document.getElementById('beitreten_button')
-beitreten_button.addEventListener('click', function (auth) {
-    console.log('in der funktion')
-    var gruppenID = this.parentElement.getAttribute('data-gruppenid'); 
-
-    const fetch = require('node-fetch');
-
+    function joinGroup(groupId, auth) { //in die function muss userid übergeben werden
+        // Daten für den Beitritt zur Gruppe vorbereiten
+        console.log('group: ',groupId)
+        console.log('auth: ',auth)
+        let startDate = getFormattedTimestamp()
+        const data = {
+            groupId: groupId,
+            startingDate: startDate,
+            userID: 2      // hier muss auch eine Variable mit userid hin            
+            
+        };
     
-
-    // Function to add a user to a group
-    async function addUserToGroup(auth, BenutzerID, gruppenID) {
-        const data = {"userID": BenutzerID, "groupID": gruppenID};     
-        const response = await fetch(`${BASE_URL}/users_in_groups`, {
+        fetch(`${BASE_URL}/users_in_groups`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                auth
+                'Authorization': auth
             },
             body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Erfolgreich beigetreten
+                console.log('Erfolgreich der Gruppe beigetreten.');
+            } else {
+                // Fehler beim Beitritt
+                console.error('Fehler beim Beitritt zur Gruppe:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Fehler beim Fetchen:', error);
         });
-        return response;
-    }
-    
-    addUserToGroup(auth,JWTToken, BenutzerID, gruppenID).then(response => {
-        console.log(`Response Status Code: ${response.status}, Response: `, response.json());
-    })
-    .catch(error => console.error('Error:', error));
-    
-  
+    }    
 
-} )
+
+    function getFormattedTimestamp() {
+        var date = new Date();
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+        var dayOfWeek = days[date.getUTCDay()];
+        var dayOfMonth = date.getUTCDate();
+        var month = months[date.getUTCMonth()];
+        var year = date.getUTCFullYear();
+        var hours = date.getUTCHours();
+        var minutes = date.getUTCMinutes();
+        var seconds = date.getUTCSeconds();
+    
+        var timestamp = dayOfWeek + ', ' + dayOfMonth + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds + ' GMT';
+    
+        return timestamp;
+    }
+
 })

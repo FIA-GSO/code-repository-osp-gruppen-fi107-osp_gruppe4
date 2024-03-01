@@ -1,3 +1,4 @@
+
 async function neueGruppeErstellen() {
     try {
         var gruppennameInput = document.getElementById("gruppenname");
@@ -11,14 +12,17 @@ async function neueGruppeErstellen() {
         if (gruppenname !== "" && beschreibung !== "" && !isNaN(maxMitglieder) && maxMitglieder > 0) {
             var neueGruppe = {
                 title: gruppenname,
-                description: beschreibung
+                description: beschreibung,
+                groupID: 0,
+                maxUsers: maxMitglieder,
+                ownerID: 1, // Hier muss eine Variable mit der Id der Angemeldeten Person hin.
             };
       
             var jwtToken = localStorage.getItem('jwtToken');
             if (!jwtToken) {
                 throw new Error('JwtToken nicht gefunden im Local Storage');
             }
-
+            console.log(neueGruppe)
             const response = await fetch('https://lbv.digital/groups', {
                 method: 'POST',
                 headers: {

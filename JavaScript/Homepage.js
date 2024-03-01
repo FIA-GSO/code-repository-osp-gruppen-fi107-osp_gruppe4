@@ -56,7 +56,7 @@ fetch(`${BASE_URL}/groups`,{
             BeitretenButton.textContent = "Beitreten";
             BeitretenButton.addEventListener('click', () => {
                 console.log('angeklickt')
-                joinGroup(gruppe.groupID, auth);
+                joinGroup(gruppe.groupID);
             })
         
             gruppenInfo.appendChild(heading);
@@ -67,15 +67,15 @@ fetch(`${BASE_URL}/groups`,{
           });
     })
 
-    function joinGroup(groupId, auth) { //in die function muss userid übergeben werden
+    function joinGroup(groupId) { //in die function muss userid übergeben werden
         // Daten für den Beitritt zur Gruppe vorbereiten
         console.log('group: ',groupId)
         console.log('auth: ',auth)
-        let startDate = getFormattedTimestamp()
+
         const data = {
-            groupId: groupId,
-            startingDate: startDate,
-            userID: 2      // hier muss auch eine Variable mit userid hin            
+            userID: 2,      // hier muss auch eine Variable mit userid hin  
+            groupID: groupId
+                      
             
         };
     
@@ -101,23 +101,5 @@ fetch(`${BASE_URL}/groups`,{
         });
     }    
 
-
-    function getFormattedTimestamp() {
-        var date = new Date();
-        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    
-        var dayOfWeek = days[date.getUTCDay()];
-        var dayOfMonth = date.getUTCDate();
-        var month = months[date.getUTCMonth()];
-        var year = date.getUTCFullYear();
-        var hours = date.getUTCHours();
-        var minutes = date.getUTCMinutes();
-        var seconds = date.getUTCSeconds();
-    
-        var timestamp = dayOfWeek + ', ' + dayOfMonth + ' ' + month + ' ' + year + ' ' + hours + ':' + minutes + ':' + seconds + ' GMT';
-    
-        return timestamp;
-    }
 
 })

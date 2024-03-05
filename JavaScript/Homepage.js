@@ -5,7 +5,7 @@ const jwtToken = localStorage.getItem('jwtToken');
                 throw new Error('JwtToken nicht gefunden im Local Storage');
             }
 //console.log(token)
-//const userID = userData.benutzerId;
+const userId = 2//userData.benutzerId;
 //const Vorname = userData.Vorname;
 //const EMail = userData.email;
 //const Admin = userData.admin;
@@ -13,10 +13,31 @@ const BASE_URL = "https://lbv.digital";
 
 const auth = {'Authorization': `Bearer ${jwtToken}`};
 
+// Auslesen der Gruppen in welchen der aktuelle Nutzer bereits eingeschrieben ist
+const groupsOfUser = []
+fetch(`${BASE_URL}/users_in_groups/${userId}/`,{
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + jwtToken
+    },
+    })
+    .then(response => {
+        if (response.ok) {
+           
+            return response.json();
+        } else {
+            throw Error('Gruppen des Nutzers konnten nicht gelesen werden.');
+        }
+    })
+    .then(data => {   
+        for (let i = 0 ; i < data.length; i++){
+            groupsOfUser.push(data[i].groupID)
+        } 
+    })
+
+
 // Alle Gruppen auslesen und auf der Webseite anzeigen
-
-
-//const fetch = require('node-fetch');
 fetch(`${BASE_URL}/groups`,{
     method: 'GET',
     headers: {
@@ -35,6 +56,7 @@ fetch(`${BASE_URL}/groups`,{
     })
     .then(data => {
         var alleGruppen = data;
+        let currentPath = window.location.pathname
         console.log(data)
         const container = document.getElementById('gruppen-container');
         alleGruppen.forEach(function(gruppe) {
@@ -49,31 +71,41 @@ fetch(`${BASE_URL}/groups`,{
         
             var nutzer = document.createElement("p");
             nutzer.textContent = "MaxNutzer: " + gruppe.maxUsers;
-        
-            // Erstellen des Beitreten-Buttons für jede Gruppe
-            var BeitretenButton = document.createElement("button");
-            BeitretenButton.classList.add("delete-button");
-            BeitretenButton.textContent = "Beitreten";
-            BeitretenButton.addEventListener('click', () => {
-                console.log('angeklickt')
-                joinGroup(gruppe.groupID);
-            })
-        
+            //console.log(gruppe.groupID);
+            //console.log(groupsOfUser);
+            var aktionButton = document.createElement("button");
+                aktionButton.classList.add("delete-button");
+            if (groupsOfUser.includes(gruppe.groupID)){
+                // Erstellen des Verlassen-Buttons für jede Gruppe
+                console.log('leave')
+                aktionButton.textContent = "Verlassen";
+                aktionButton.addEventListener('click', () => {
+                    console.log('angeklickt')
+                    leaveGroup(gruppe.groupID);
+                })
+            } else
+            {
+                // Erstellen des Beitreten-Buttons für jede Gruppe
+                aktionButton.textContent = "Beitreten";
+                aktionButton.addEventListener('click', () => {
+                    joinGroup(gruppe.groupID);
+                })
+            }
             gruppenInfo.appendChild(heading);
             gruppenInfo.appendChild(beschreibung);
             gruppenInfo.appendChild(nutzer);
-            gruppenInfo.appendChild(BeitretenButton); // Hinzufügen des Lösch-Buttons zur Gruppe
+            gruppenInfo.appendChild(aktionButton); // Hinzufügen des Lösch-Buttons zur Gruppe
             container.appendChild(gruppenInfo);
           });
     })
 
-    function joinGroup(groupId) { //in die function muss userid übergeben werden
+    function joinGroup(groupId) {
         // Daten für den Beitritt zur Gruppe vorbereiten
         console.log('group: ',groupId)
         console.log('auth: ',jwtToken)
 
-        const data = {
-            userID: 2,      // hier muss auch eine Variable mit userid hin  
+        let addUserData = {
+            userID: userId, 
             groupID: groupId
                       
             
@@ -85,7 +117,7 @@ fetch(`${BASE_URL}/groups`,{
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + jwtToken
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(addUserData)
         })
         .then(response => {
             if (response.ok) {
@@ -101,5 +133,22 @@ fetch(`${BASE_URL}/groups`,{
         });
     }    
 
+    function leaveGroup(groupId){
+        fetch(`${BASE_URL}/users_in_groups/${userId}/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + adminToken
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Erfolgreich beigetreten
+                console.log('Erfolgreich der Gruppe ausgetreten.');
+            } else {
+                // Fehler beim Beitritt
+                console.log('Fehler beim Austritt aus der Gruppe:', response.statusText);
+            }
+        })
 
+    }
 })

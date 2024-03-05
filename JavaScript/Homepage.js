@@ -35,7 +35,7 @@ fetch(`${BASE_URL}/users_in_groups/${userId}/`,{
             groupsOfUser.push(data[i].groupID)
         } 
     })
-
+    console.log('1.groupsofuser',groupsOfUser);
 
 // Alle Gruppen auslesen und auf der Webseite anzeigen
 fetch(`${BASE_URL}/groups`,{
@@ -59,7 +59,14 @@ fetch(`${BASE_URL}/groups`,{
         let currentPath = window.location.pathname
         console.log(data)
         const container = document.getElementById('gruppen-container');
+        if (currentPath == '/Views/myGroups'){
+
+        }
         alleGruppen.forEach(function(gruppe) {
+            if (currentPath == '/Views/myGroups.html' && groupsOfUser.includes(gruppe.groupID) ||
+                currentPath == '/Views/myGroups.html' && userId == gruppe.ownerID ||
+                currentPath == '/Views/Homepage.html'){
+     
             var gruppenInfo = document.createElement("div");
             gruppenInfo.classList.add("gruppen-info");
         
@@ -71,46 +78,49 @@ fetch(`${BASE_URL}/groups`,{
         
             var nutzer = document.createElement("p");
             nutzer.textContent = "MaxNutzer: " + gruppe.maxUsers;
-            //console.log(gruppe.groupID);
+            
             //console.log(groupsOfUser);
             var aktionButton = document.createElement("button");
                 aktionButton.classList.add("delete-button");
-            if (groupsOfUser.includes(gruppe.groupID)){
+            if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID){
                 // Erstellen des Verlassen-Buttons für jede Gruppe
-                console.log('leave')
+                
                 aktionButton.textContent = "Verlassen";
                 aktionButton.addEventListener('click', () => {
                     console.log('angeklickt')
                     leaveGroup(gruppe.groupID);
                 })
-            } else
+            } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID)
             {
                 // Erstellen des Beitreten-Buttons für jede Gruppe
                 aktionButton.textContent = "Beitreten";
                 aktionButton.addEventListener('click', () => {
                     joinGroup(gruppe.groupID);
                 })
+            } else if(userId == gruppe.ownerID){
+                // Erstellen des Auflösen-Buttons
+                aktionButton.textContent = "Auflösen"
+                // Funktion muss noch implementiert werden
             }
+            
             gruppenInfo.appendChild(heading);
             gruppenInfo.appendChild(beschreibung);
             gruppenInfo.appendChild(nutzer);
             gruppenInfo.appendChild(aktionButton); // Hinzufügen des Lösch-Buttons zur Gruppe
             container.appendChild(gruppenInfo);
+        }
           });
     })
 
+
+
+
     function joinGroup(groupId) {
         // Daten für den Beitritt zur Gruppe vorbereiten
-        console.log('group: ',groupId)
-        console.log('auth: ',jwtToken)
-
         let addUserData = {
             userID: userId, 
-            groupID: groupId
-                      
-            
+            groupID: groupId          
         };
-    
         fetch(`${BASE_URL}/users_in_groups`, {
             method: 'POST',
             headers: {
@@ -137,13 +147,14 @@ fetch(`${BASE_URL}/groups`,{
         fetch(`${BASE_URL}/users_in_groups/${userId}/${groupId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': 'Bearer ' + adminToken
+                'Authorization': 'Bearer ' + jwtToken
             }
         })
         .then(response => {
             if (response.ok) {
                 // Erfolgreich beigetreten
                 console.log('Erfolgreich der Gruppe ausgetreten.');
+                location.reload()
             } else {
                 // Fehler beim Beitritt
                 console.log('Fehler beim Austritt aus der Gruppe:', response.statusText);

@@ -59,59 +59,73 @@ fetch(`${BASE_URL}/groups`,{
         let currentPath = window.location.pathname
         console.log(data)
         const container = document.getElementById('gruppen-container');
-        if (currentPath == '/Views/myGroups'){
-
-        }
         alleGruppen.forEach(function(gruppe) {
             if (currentPath == '/Views/myGroups.html' && groupsOfUser.includes(gruppe.groupID) ||
                 currentPath == '/Views/myGroups.html' && userId == gruppe.ownerID ||
                 currentPath == '/Views/Homepage.html'){
      
-            var gruppenInfo = document.createElement("div");
-            gruppenInfo.classList.add("gruppen-info");
-        
-            var heading = document.createElement("h3");
-            heading.textContent = gruppe.title;
-        
-            var beschreibung = document.createElement("p");
-            beschreibung.textContent = gruppe.description;
-        
-            var nutzer = document.createElement("p");
-            nutzer.textContent = "MaxNutzer: " + gruppe.maxUsers;
+                var gruppenInfo = document.createElement("div");
+                gruppenInfo.classList.add("gruppen-info");
             
-            //console.log(groupsOfUser);
-            var aktionButton = document.createElement("button");
-                aktionButton.classList.add("delete-button");
-            if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID){
-                // Erstellen des Verlassen-Buttons für jede Gruppe
+                var heading = document.createElement("h3");
+                heading.textContent = gruppe.title;
+            
+                var beschreibung = document.createElement("p");
+                beschreibung.textContent = gruppe.description;
                 
-                aktionButton.textContent = "Verlassen";
-                aktionButton.addEventListener('click', () => {
-                    console.log('angeklickt')
-                    leaveGroup(gruppe.groupID);
+                let usersInGroup = [];
+                var nutzer = document.createElement("p");
+                fetch(`${BASE_URL}/groups/${gruppe.groupID}/members`, {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + jwtToken }
                 })
-            } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID)
-            {
-                // Erstellen des Beitreten-Buttons für jede Gruppe
-                aktionButton.textContent = "Beitreten";
-                aktionButton.addEventListener('click', () => {
-                    joinGroup(gruppe.groupID);
+                .then(response => {
+                    if (response.ok) {
+                       
+                        return response.json();
+                    } else {
+                        throw Error('Nutzer der Gruppe konnten nicht gelesen werden.');
+                    }
                 })
-            } else if(userId == gruppe.ownerID){
-                // Erstellen des Auflösen-Buttons
-                aktionButton.textContent = "Auflösen"
-                // Funktion muss noch implementiert werden
-            }
+                .then(data => {
+                    console.log(data) 
+                    for (let i = 0 ; i < data.length; i++){
+                        usersInGroup.push(data[i])
+                    }                    
+                    nutzer.textContent = usersInGroup.length + "/" + gruppe.maxUsers;
+                })
             
-            gruppenInfo.appendChild(heading);
-            gruppenInfo.appendChild(beschreibung);
-            gruppenInfo.appendChild(nutzer);
-            gruppenInfo.appendChild(aktionButton); // Hinzufügen des Lösch-Buttons zur Gruppe
-            container.appendChild(gruppenInfo);
-        }
+                var aktionButton = document.createElement("button");
+                    aktionButton.classList.add("delete-button");
+                if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID){
+                    // Erstellen des Verlassen-Buttons für jede Gruppe
+                    
+                    aktionButton.textContent = "Verlassen";
+                    aktionButton.addEventListener('click', () => {
+                        console.log('angeklickt')
+                        leaveGroup(gruppe.groupID);
+                    })
+                } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID)
+                {
+                    // Erstellen des Beitreten-Buttons für jede Gruppe
+                    aktionButton.textContent = "Beitreten";
+                    aktionButton.addEventListener('click', () => {
+                        joinGroup(gruppe.groupID);
+                    })
+                } else if(userId == gruppe.ownerID){
+                    // Erstellen des Auflösen-Buttons
+                    aktionButton.textContent = "Auflösen"
+                    // Funktion muss noch implementiert werden
+                }
+                
+                gruppenInfo.appendChild(heading);
+                gruppenInfo.appendChild(beschreibung);
+                gruppenInfo.appendChild(nutzer);
+                gruppenInfo.appendChild(aktionButton); // Hinzufügen des Lösch-Buttons zur Gruppe
+                container.appendChild(gruppenInfo);
+            }
           });
     })
-
 
 
 

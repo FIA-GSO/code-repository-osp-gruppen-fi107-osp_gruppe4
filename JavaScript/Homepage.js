@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 //const userData = JSON.parse(localStorage.getItem('currentUser'));
-var jwtToken = localStorage.getItem('jwtToken');
+const jwtToken = localStorage.getItem('jwtToken');
             if (!jwtToken) {
                 throw new Error('JwtToken nicht gefunden im Local Storage');
             }
@@ -70,7 +70,7 @@ fetch(`${BASE_URL}/groups`,{
     function joinGroup(groupId) { //in die function muss userid übergeben werden
         // Daten für den Beitritt zur Gruppe vorbereiten
         console.log('group: ',groupId)
-        console.log('auth: ',auth)
+        console.log('auth: ',jwtToken)
 
         const data = {
             userID: 2,      // hier muss auch eine Variable mit userid hin  
@@ -83,17 +83,17 @@ fetch(`${BASE_URL}/groups`,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': auth
+                'Authorization': 'Bearer ' + jwtToken
             },
             body: JSON.stringify(data)
         })
         .then(response => {
             if (response.ok) {
                 // Erfolgreich beigetreten
-                console.log('Erfolgreich der Gruppe beigetreten.');
+                window.alert('Erfolgreich der Gruppe beigetreten.');
             } else {
                 // Fehler beim Beitritt
-                console.error('Fehler beim Beitritt zur Gruppe:', response.statusText);
+                window.alert('Fehler beim Beitritt zur Gruppe:', response.statusText);
             }
         })
         .catch(error => {

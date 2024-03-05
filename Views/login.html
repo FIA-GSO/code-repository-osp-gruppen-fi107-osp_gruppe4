@@ -30,16 +30,6 @@
         }
       }
     </style>
-
-<script>
-  let adminToken = localStorage.getItem('jwtToken');
-
-  // Check if the token exists
-  if (adminToken) {
-      // Redirect to /login if there is no token
-      window.location.href = '/dashboard';
-  } 
-</script>
     
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="../CSS/login.css">
@@ -60,42 +50,8 @@
 
 
 
-<script>
-  document.querySelector('.form-signin').addEventListener('submit', function(event) {
-      event.preventDefault();
+<script src="/JavaScript/login.js">
 
-      var email = document.getElementById('inputEmail').value;
-      var password = document.getElementById('inputPassword').value;
-
-      fetch('https://lbv.digital/login', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              email: email,
-              password: password
-          })
-      })
-      .then(response => {
-          if (response.ok) {
-              return response.json();
-          } else {
-              throw new Error('Login fehlgeschlagen');
-          }
-      })
-      .then(data => {
-          // Speichern des JWT-Tokens im lokalen Speicher oder in einer Variablen
-          localStorage.setItem('jwtToken', data.access_token); // oder eine andere Speichermethode
-
-          // Weiterleitung zum Dashboard oder zur nächsten Seite
-          window.location.href = '/Homepage'; // URL anpassen
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          alert('Login fehlgeschlagen: ' + error.message);
-      });
-  });
 </script>
   </body>
 </html>

@@ -125,31 +125,43 @@
     display: block;
     margin-bottom: 10px;
   }
+
   
   .neue-gruppe input[type="text"],
   .neue-gruppe textarea,
   .neue-gruppe select {
     width: calc(100% - 20px);
-    max-width: 400px; /* Maximale Breite festlegen */
+    max-width: 400px; 
     padding: 10px;
     box-sizing: border-box;
     margin-bottom: 20px;
-    margin-left: auto; /* Zentrieren der Eingabefelder */
-    margin-right: auto; /* Zentrieren der Eingabefelder */
+    margin-left: auto; 
+    margin-right: auto; 
+  }
+  input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  input[type="date"]:focus {
+    border-color: #007bff;
+    outline: none;
   }
   
  
   .neue-gruppe select {
-    width: 100%; /* Vollständige Breite für Select-Feld */
+    width: 100%; 
   }
 
   .neue-gruppe select {
-  width: 100%; /* Vollständige Breite für Select-Feld */
+  width: 100%; 
   }
   
   /* Styles für jede einzelne Gruppe */
   .gruppen-info {
-    width: calc(50% - 20px); /* Halbe Breite des Containers minus Abstand */
+    width: calc(50% - 20px); 
     margin-bottom: 20px;
     padding: 20px;
     background-color: #39adf0;

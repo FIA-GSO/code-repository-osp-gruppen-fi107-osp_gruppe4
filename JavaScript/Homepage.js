@@ -72,6 +72,9 @@ fetch(`${BASE_URL}/groups`,{
             
                 var beschreibung = document.createElement("p");
                 beschreibung.textContent = gruppe.description;
+
+                var termin = document.createElement("p")
+                termin.textContent = gruppe.termin;
                 
                 let usersInGroup = [];
                 var nutzer = document.createElement("p");
@@ -118,9 +121,11 @@ fetch(`${BASE_URL}/groups`,{
                     // Funktion muss noch implementiert werden
                 }
                 
+                // hinzufügen des Gruppeninhalts
                 gruppenInfo.appendChild(heading);
                 gruppenInfo.appendChild(beschreibung);
                 gruppenInfo.appendChild(nutzer);
+                gruppenInfo.appendChild(termin)
                 gruppenInfo.appendChild(aktionButton); // Hinzufügen des Lösch-Buttons zur Gruppe
                 container.appendChild(gruppenInfo);
             }

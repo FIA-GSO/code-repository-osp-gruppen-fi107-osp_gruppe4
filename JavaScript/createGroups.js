@@ -4,10 +4,12 @@ async function neueGruppeErstellen() {
         var gruppennameInput = document.getElementById("gruppenname");
         var beschreibungInput = document.getElementById("beschreibung");
         var maxMitgliederInput = document.getElementById("maxMitglieder");
+        var terminInput = document.getElementById("termin");
       
         var gruppenname = gruppennameInput.value.trim();
         var beschreibung = beschreibungInput.value.trim();
         var maxMitglieder = parseInt(maxMitgliederInput.value);
+        var terminAuswahl = terminInput.value.trim();
       
         if (gruppenname !== "" && beschreibung !== "" && !isNaN(maxMitglieder) && maxMitglieder > 0) {
             var neueGruppe = {
@@ -15,6 +17,7 @@ async function neueGruppeErstellen() {
                 description: beschreibung,
                 groupID: 0,
                 maxUsers: maxMitglieder,
+                termin: terminAuswahl, // Das Datum wird hier hinzugefügt
                 ownerID: 1, // Hier muss eine Variable mit der Id der Angemeldeten Person hin.
             };
       
@@ -41,6 +44,7 @@ async function neueGruppeErstellen() {
             gruppennameInput.value = "";
             beschreibungInput.value = "";
             maxMitgliederInput.value = "";
+            fterminInput.value = "";
 
         } else {
             alert("Bitte füllen Sie alle Felder aus und geben Sie eine gültige maximale Anzahl von Mitgliedern an.");

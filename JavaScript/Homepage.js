@@ -4,8 +4,13 @@ const jwtToken = localStorage.getItem('jwtToken');
             if (!jwtToken) {
                 throw new Error('JwtToken nicht gefunden im Local Storage');
             }
+const userId = localStorage.getItem('userId');
+            if(!userId) {
+                window.location.href = '/Views/login.html';
+                throw new Error('Kein Benutzer angemeldet');
+                
+            }
 //console.log(token)
-const userId = 2//userData.benutzerId;
 //const Vorname = userData.Vorname;
 //const EMail = userData.email;
 //const Admin = userData.admin;

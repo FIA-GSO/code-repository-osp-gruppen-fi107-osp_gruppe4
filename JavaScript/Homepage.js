@@ -10,6 +10,14 @@ const userId = localStorage.getItem('userId');
                 throw new Error('Kein Benutzer angemeldet');
                 
             }
+//var ppf = document.getElementById('ppf')
+//ppf.addEventListener('click',() => {
+//    console.log('test')
+//    var dropdown = document.getElementById('dropdown');
+    
+//    dropdown.classList.add('display:block;');
+    
+//    })
 //console.log(token)
 //const Vorname = userData.Vorname;
 //const EMail = userData.email;
@@ -62,7 +70,6 @@ fetch(`${BASE_URL}/groups`,{
     .then(data => {
         var alleGruppen = data;
         let currentPath = window.location.pathname
-        console.log(data)
         const container = document.getElementById('gruppen-container');
         alleGruppen.forEach(function(gruppe) {
             if (currentPath == '/Views/myGroups.html' && groupsOfUser.includes(gruppe.groupID) ||
@@ -96,7 +103,6 @@ fetch(`${BASE_URL}/groups`,{
                     }
                 })
                 .then(data => {
-                    console.log(data) 
                     for (let i = 0 ; i < data.length; i++){
                         usersInGroup.push(data[i])
                     }                    
@@ -110,7 +116,6 @@ fetch(`${BASE_URL}/groups`,{
                     
                     aktionButton.textContent = "Verlassen";
                     aktionButton.addEventListener('click', () => {
-                        console.log('angeklickt')
                         leaveGroup(gruppe.groupID);
                     })
                 } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID)

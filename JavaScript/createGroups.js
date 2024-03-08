@@ -19,12 +19,7 @@ async function neueGruppeErstellen() {
                 description: beschreibung,
                 groupID: 0,
                 maxUsers: maxMitglieder,
-<<<<<<< HEAD
-                termin: terminAuswahl, // Das Datum wird hier hinzugefügt
-                ownerID: 1, // Hier muss eine Variable mit der Id der Angemeldeten Person hin.
-=======
                 ownerID: userId, 
->>>>>>> 033c6be35e4b3108415859c266f277cb5cf52ae8
             };
       
             var jwtToken = localStorage.getItem('jwtToken');

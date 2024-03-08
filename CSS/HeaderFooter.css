@@ -54,27 +54,7 @@ body {
     object-fit: cover;
   }
 
-  .dropdown {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    display: none;
-  }
-
-  .dropdown.active {
-    display: block;
-  }
-
-  .dropdown a {
-    display: block;
-    color: #333;
-    text-decoration: none;
-    padding: 5px 0;
-  }
+ 
   .impressum{
     color: #000000;
     border: none;

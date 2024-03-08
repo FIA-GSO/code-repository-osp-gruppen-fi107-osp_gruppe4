@@ -19,11 +19,25 @@
         <div class="profile-circle" onclick="toggleDropdown()">
           <img src="../Views/instance/default_profile_picture.jpg" alt="Profile Image">
         </div>
-        <div class="dropdown" id="dropdown">
-          <a href="#">Profil</a>
-          <a href="#">Einstellungen</a>
-          <a href="#">Ausloggen</a>
-        </div>
+        <div class="dropdown">
+          <img id="profilePicture" class="rounded-circle dropdown-toggle"
+              style="height: 38px; width: 38px; object-fit: cover; cursor: pointer;" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false" alt="Profile Picture" title="Profiloptionen"
+              draggable="false">
+          <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profilePictureModal">
+                  <i class="bi bi-person-circle mr-2"></i>Profil
+              </a>
+              <a class="dropdown-item" href="https://github.com/jexxme/groupManagementAPI/blob/main/readme.md"
+                  target="_blank">
+                  <i class="bi bi-file-earmark-text mr-2"></i>Einstellungen
+              </a>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item text-danger" id="logoutButton">
+                  <i class="bi bi-box-arrow-right mr-2"></i>Ausloggen
+              </button>
+          </div>
+      </div>
       </div>
     </nav>
   </header>

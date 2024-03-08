@@ -25,6 +25,14 @@ const userId = localStorage.getItem('userId');
 const BASE_URL = "https://lbv.digital";
 
 const auth = {'Authorization': `Bearer ${jwtToken}`};
+var ausloggenbtn = document.getElementById('logoutButton')
+ausloggenbtn.addEventListener('click', () => {
+    localStorage.removeItem('email');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('isAdmin');
+    window.location.href = '/Views/login.html';
+})
 
 // Auslesen der Gruppen in welchen der aktuelle Nutzer bereits eingeschrieben ist
 const groupsOfUser = []
@@ -162,6 +170,7 @@ fetch(`${BASE_URL}/groups`,{
             if (response.ok) {
                 // Erfolgreich beigetreten
                 window.alert('Erfolgreich der Gruppe beigetreten.');
+                location.reload()
             } else {
                 // Fehler beim Beitritt
                 window.alert('Fehler beim Beitritt zur Gruppe:', response.statusText);

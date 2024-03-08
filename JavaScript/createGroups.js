@@ -1,4 +1,12 @@
 const userId = localStorage.getItem('userId');
+var ausloggenbtn = document.getElementById('logoutButton')
+ausloggenbtn.addEventListener('click', () => {
+    localStorage.removeItem('email');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('isAdmin');
+    window.location.href = '/Views/login.html';
+})
 
 async function neueGruppeErstellen() {
     try {

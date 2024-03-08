@@ -10,12 +10,7 @@ const userId = localStorage.getItem('userId');
                 throw new Error('Kein Benutzer angemeldet');
                 
             }
-//var ppf = document.getElementById('ppf')
-//ppf.addEventListener('click',() => {
-//    console.log('test')
-//    var dropdown = document.getElementById('dropdown');
-    
-//    dropdown.classList.add('display:block;');
+
     
 //    })
 //console.log(token)
@@ -25,7 +20,8 @@ const userId = localStorage.getItem('userId');
 const BASE_URL = "https://lbv.digital";
 
 const auth = {'Authorization': `Bearer ${jwtToken}`};
-var ausloggenbtn = document.getElementById('logoutButton')
+
+var ausloggenbtn = document.getElementById('logoutButton');
 ausloggenbtn.addEventListener('click', () => {
     localStorage.removeItem('email');
     localStorage.removeItem('firstName');

@@ -21,18 +21,13 @@
         <div class="profile-circle">
           <img src="../Views/instance/default_profile_picture.jpg" alt="Profile Image">
         </div>
-        <!--<div class="dropdown" id="dropdown">
-          <a href="#">Profil</a>
-          <a href="#">Einstellungen</a>
-          <a href="#">Ausloggen</a>
-        </div> -->
         <div class="dropdown">
           <img id="profilePicture" class="rounded-circle dropdown-toggle"
               style="height: 38px; width: 38px; object-fit: cover; cursor: pointer;" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false" alt="Profile Picture" title="Profiloptionen"
               draggable="false">
           <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item" href="/Views/profil.html" data-toggle="modal" data-target="#profilePictureModal">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profilePictureModal">
                   <i class="bi bi-person-circle mr-2"></i>Profil
               </a>
               <a class="dropdown-item" href="https://github.com/jexxme/groupManagementAPI/blob/main/readme.md"
@@ -48,15 +43,25 @@
       </div>
     </nav>
   </header>
+
   <main>
-    <div class="gruppen-container" id="gruppen-container">
-      <!-- Hier werden die Gruppen dynamisch eingefügt -->
-    </div>
+    <div class="container">
+        <div class="left">
+          <img src="profilbild.jpg" alt="Profilbild" width="200" height="200">
+          <button>Profilbild ändern</button>
+        </div>
+        <div class="right">
+          <p>Vorname: Max</p>
+          <p>Email: max@example.com</p>
+          <button>Passwort ändern</button>
+        </div>
+      </div>
   </main>
+
   <footer>
     <button class="delete-button" id="deleteButton" onclick="window.location.href='impressum.html'">Impressum</button>
   </footer>
-  <script src="../JavaScript/Homepage.js">
+  <script src="../JavaScript/profil.js">
     
   </script>
 </body>

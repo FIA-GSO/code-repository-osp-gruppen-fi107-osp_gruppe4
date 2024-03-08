@@ -1,3 +1,4 @@
+const userId = localStorage.getItem('userId');
 
 async function neueGruppeErstellen() {
     try {
@@ -10,12 +11,13 @@ async function neueGruppeErstellen() {
         var maxMitglieder = parseInt(maxMitgliederInput.value);
       
         if (gruppenname !== "" && beschreibung !== "" && !isNaN(maxMitglieder) && maxMitglieder > 0) {
+            // Daten der neuen Gruppe
             var neueGruppe = {
                 title: gruppenname,
                 description: beschreibung,
                 groupID: 0,
                 maxUsers: maxMitglieder,
-                ownerID: 1, // Hier muss eine Variable mit der Id der Angemeldeten Person hin.
+                ownerID: userId, 
             };
       
             var jwtToken = localStorage.getItem('jwtToken');

@@ -1,9 +1,24 @@
 let adminToken = localStorage.getItem('jwtToken');
-
 // Check if the token exists
-if (adminToken) {
+if (!adminToken) {
     // Redirect to /login if there is no token
     window.location.href = '/Views/login.html';
+}
+let globaleMail = localStorage.getItem('email');
+if (globaleMail) {
+    localStorage.removeItem('email')
+}
+let globalName = localStorage.getItem('firstName');
+if (globalName) {
+    localStorage.removeItem('firstName')
+}
+let globaleId = localStorage.getItem('userId');
+if (globaleId) {
+    localStorage.removeItem('userId')
+}
+let globaleAdmin = localStorage.getItem('isAdmin');
+if (globaleAdmin) {
+    localStorage.removeItem('isAdmin')
 }
 
 document.querySelector('.form-signin').addEventListener('submit', function(event) {
@@ -33,8 +48,28 @@ document.querySelector('.form-signin').addEventListener('submit', function(event
         // Speichern des JWT-Tokens im lokalen Speicher oder in einer Variablen
         localStorage.setItem('jwtToken', data.access_token); // oder eine andere Speichermethode
 
-        // Weiterleitung zum Dashboard oder zur nächsten Seite
-        window.location.href = '/Views/Homepage.html'; // URL anpassen
+        fetch(`https://lbv.digital/users/email/${encodeURIComponent(email)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            } 
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Login fehlgeschlagen');
+            }
+        })
+        .then(data => {
+            localStorage.setItem('email',data.email);
+            localStorage.setItem('userId', data.userID);
+            localStorage.setItem('firstName',data.firstName);
+            localStorage.setItem('isAdmin',data.isAdmin);
+
+            // Weiterleitung zum Dashboard oder zur nächsten Seite
+            window.location.href = '/Views/Homepage.html';
+        })
     })
     .catch(error => {
         console.error('Error:', error);

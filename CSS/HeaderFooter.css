@@ -49,3 +49,16 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
+
+  .create-group-btn {
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for background color and scaling */
+}
+
+.create-group-btn:hover {
+    transform: scale(1.03); /* Slightly scale the button up */
+}
+
+  .create-group-btn, .create-group-btn:link, .create-group-btn:visited, .create-group-btn:hover, .create-group-btn:active {
+    text-decoration: none;
+}

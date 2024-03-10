@@ -90,18 +90,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
                     var aktionButton = document.createElement("button");
                     if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
-                        aktionButton.textContent = "Verlassen";
+                        aktionButton.innerHTML = '<i class="bi bi-box-arrow-right"></i> Verlassen';
                         aktionButton.style.backgroundColor = "#ffc107";
                         aktionButton.addEventListener('click', () => {
                             leaveGroup(gruppe.groupID);
                         });
                     } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
-                        aktionButton.textContent = "Beitreten";
+                        aktionButton.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Beitreten';
                         aktionButton.addEventListener('click', () => {
                             joinGroup(gruppe.groupID);
                         });
                     } else if (userId == gruppe.ownerID) {
-                        aktionButton.textContent = "Auflösen";
+                        aktionButton.innerHTML = '<i class="bi bi-x-lg"></i> Auflösen';
                         aktionButton.style.backgroundColor = "#DC3545";
                     }
         

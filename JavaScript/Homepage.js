@@ -1,3 +1,5 @@
+const BASE_URL = 'https://lbv.digital';
+
 // Gruppen Stuff
 document.addEventListener('DOMContentLoaded', () => {
     const jwtToken = localStorage.getItem('jwtToken');
@@ -57,27 +59,27 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const gruppe of alleGruppen) {
                 if ((currentPath == '/Views/myGroups.html' && (groupsOfUser.includes(gruppe.groupID) || userId == gruppe.ownerID)) ||
                     currentPath == '/Views/Homepage.html') {
-        
+
                     var gruppenInfo = document.createElement("div");
                     gruppenInfo.classList.add("gruppen-info");
-        
+
                     var heading = document.createElement("h3");
                     heading.textContent = gruppe.title;
-        
+
                     var beschreibung = document.createElement("p");
                     beschreibung.textContent = gruppe.description;
-        
+
                     var termin = document.createElement("p");
                     termin.textContent = gruppe.termin;
-        
+
                     var nutzer = document.createElement("p");
-        
+
                     try {
                         const response = await fetch(`${BASE_URL}/groups/${gruppe.groupID}/members`, {
                             method: 'GET',
                             headers: { 'Authorization': 'Bearer ' + jwtToken }
                         });
-        
+
                         if (response.ok) {
                             const data = await response.json();
                             nutzer.textContent = `${data.length}/${gruppe.maxUsers}`;
@@ -87,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } catch (error) {
                         console.error(error);
                     }
-        
+
                     var aktionButton = document.createElement("button");
                     if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
                         aktionButton.innerHTML = '<i class="bi bi-box-arrow-right"></i> Verlassen';
@@ -105,21 +107,70 @@ document.addEventListener('DOMContentLoaded', () => {
                         aktionButton.innerHTML = '<i class="bi bi-x-lg"></i> Auflösen';
                         aktionButton.classList.add("button-aufloesen");
                     }
-        
+                    // "Backend Daten" in HTML-Elemente speichern
+                    gruppenInfo.dataset.groupId = gruppe.groupID; // This adds a data-group-id attribute to the div
+                    gruppenInfo.dataset.ownerId = gruppe.ownerID; // This adds a data-owner-id attribute to the div
+                    gruppenInfo.dataset.title = gruppe.title; // This adds a data-title attribute to the div
+                    gruppenInfo.dataset.description = gruppe.description; // This adds a data-description attribute to the div
+
+                    gruppenInfo.addEventListener('click', showGroupInfoModal);
+
+                    // HTML-Elemente anhängen (usersided)
                     gruppenInfo.appendChild(heading);
                     gruppenInfo.appendChild(beschreibung);
                     gruppenInfo.appendChild(nutzer);
                     gruppenInfo.appendChild(termin);
                     gruppenInfo.appendChild(aktionButton);
+
                     container.appendChild(gruppenInfo);
                 }
             }
         })
-        
-        
-        
 
 
+
+        async function showGroupInfoModal(event) {
+            // Retrieve data from the clicked group
+            const title = this.dataset.title;
+            const description = this.dataset.description;
+            const ownerId = this.dataset.ownerId;
+        
+            // Show preliminary data in the modal
+            document.getElementById('groupInfoModalLabel').textContent = title; // Set modal title to group title
+            document.getElementById('groupDescription').textContent = description;
+            document.getElementById('groupOwner').textContent = 'Loading...'; // Show loading state
+        
+            // Fetch the owner's name using ownerId and update the modal
+            const ownerName = await fetchOwnerName(ownerId);
+            document.getElementById('groupOwner').textContent = ownerName;
+        
+            // Finally, show the modal
+            $('#groupInfoModal').modal('show');
+        }
+        
+
+        async function fetchOwnerName(ownerId) {
+            try {
+                const response = await fetch(`${BASE_URL}/users/${ownerId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    return `${data.firstName}`; // Assuming you just want the first name
+                } else {
+                    console.error('Owner not found');
+                    return 'Owner not found'; // Return a default message or handle accordingly
+                }
+            } catch (error) {
+                console.error('Failed to fetch owner', error);
+                return 'Failed to load owner'; // Return a default error message
+            }
+        }
+        
 
     function joinGroup(groupId) {
         // Daten für den Beitritt zur Gruppe vorbereiten

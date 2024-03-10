@@ -26,8 +26,9 @@
       position: relative;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
       transition: box-shadow 0.3s ease, transform 0.3s ease;
-      /* cursor: pointer; */
+      cursor: pointer;
     }
+
     .gruppen-info:hover {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for lifted effect */
       transform: translateY(-3px); /* Slight upward movement on hover */
@@ -106,3 +107,47 @@
       width: 100%;
       bottom: 0; /* Fußzeile am unteren Bildschirmrand positionieren */
     }
+
+
+    /* Custom CSS for an extra-large modal */
+.modal-xl {
+  max-width: 70%; /* Adjust this value according to your needs */
+}
+
+/* Custom styles for the modal to make it look like a card */
+.modal-content {
+  border: none; /* Removes the default modal border */
+  border-radius: 0.5rem; /* Adds rounded corners similar to a card */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow like a card */
+}
+
+.modal-header, .modal-footer {
+  border: none; /* Removes the header and footer borders */
+  padding: 1.25rem; /* Adjusts the padding to match card style */
+}
+
+.modal-body {
+  padding: 1.25rem; /* Adjusts the body padding to be more card-like */
+}
+
+.modal-backdrop.show {
+  opacity: 30%; 
+}
+
+
+.modal-body h5 {
+  font-weight: bold; /* Makes headings bold */
+}
+
+.modal-body p {
+  background-color: #f8f9fa; /* A light grey background */
+  padding: 10px;
+  border-radius: 5px; /* Rounded corners */
+  border: 1px solid #e9ecef; /* A light border */
+}
+
+/* Custom icon styling */
+.modal-body .bi {
+  margin-right: 5px; /* Space between icon and text */
+  color: #000000; /* Bootstrap primary color for icons */
+}

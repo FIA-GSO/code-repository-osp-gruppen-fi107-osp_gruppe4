@@ -113,7 +113,7 @@
             <h3 id="name">Max Mustermann <a class="bi bi-pencil" onclick="editName()" style="cursor: pointer;"></a></h3>
             <p id="email">max.muster@muster.com</p>
             <button class="button" onclick="editPassword()">Passwort ändern</button>
-            <button class="button warning" onclick="">Konto löschen</button>
+            <button class="button warning" onclick="showDeleteAccountModal()">Konto löschen</button>
         </div>
     </div>
 
@@ -533,6 +533,88 @@
     </script>
 
 
+<!-- Bootstrap Modal for Account Deletion Confirmation -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Konto löschen</h5>
+            </div>
+            <div class="modal-body">
+                <p>Bitte tippen Sie "Ich bin mir sicher!" um zu bestätigen, dass Sie Ihr Konto unwiderruflich löschen möchten.</p>
+                <input type="text" class="form-control" id="accountDeletionConfirmation" placeholder="Ich bin mir sicher!">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="hideDeleteAccountModal()">Abbrechen</button>
+                <button type="button" class="btn btn-danger" id="deleteAccountButton" disabled>Konto unwiderruflich löschen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var confirmationInput = document.getElementById('accountDeletionConfirmation');
+        var deleteButton = document.getElementById('deleteAccountButton');
+        
+        confirmationInput.addEventListener('input', function() {
+            deleteButton.disabled = this.value !== "Ich bin mir sicher!";
+        });
+
+        deleteButton.addEventListener('click', function() {
+            // Get the user ID from localStorage
+            var userId = localStorage.getItem('userId');
+            // Get the JWT token from localStorage
+            var jwtToken = localStorage.getItem('jwtToken');
+            // Construct the request URL
+            var url = `https://lbv.digital/users/${userId}`;
+            // Make the DELETE request to delete the account
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}` // Assuming the token is a Bearer token
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Account deleted successfully');
+                    showSuccessToast('Konto erfolgreich gelöscht!');
+                    showInfoToast('Sie werden in Kürze zur Anmeldeseite weitergeleitet.');
+                    // Wait for 3 seconds before redirecting to the login page
+                    setTimeout(() => {
+                        // Clear the localStorage
+                        localStorage.clear();
+                        // Redirect to the login page
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    console.error('Failed to delete account', response.statusText);
+                    showErrorToast('Fehler beim Löschen des Kontos!');
+                }
+            })
+            .catch(error => {
+                console.error('Error during the delete request:', error);
+                showErrorToast('Fehler beim Löschen des Kontos!');
+            });
+        });
+    });
+</script>
+
+<script>
+    // Function to show the modal
+    function showDeleteAccountModal() {
+        var deleteAccountModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+        deleteAccountModal.show();
+    }
+
+    // Function to hide the modal
+    function hideDeleteAccountModal() {
+        var deleteAccountModal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
+        deleteAccountModal.hide();
+    }
+</script>
+
+
 
     <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
 
@@ -548,7 +630,7 @@
             right: 0;
             margin-right: 20px;
             margin-bottom: 20px;
-            z-index: 11;
+            z-index: 2000;
         }
 
         .toast {
@@ -566,44 +648,72 @@
             background-color: #dc3545;
             color: white;
         }
+
+        .toast-info {
+            background-color: #ff9c07;
+            color: white;
+        }
     </style>
 
 
-    <script>
-        function createToast(message, isSuccess) {
-            var toast = document.createElement('div');
-            toast.className = 'toast align-items-center' + (isSuccess ? ' bg-success text-white' : ' bg-danger text-white');
-            toast.role = 'alert';
-            toast.ariaLive = 'assertive';
-            toast.ariaAtomic = 'true';
-            toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-        </div>
-    `;
+<script>
+    function createToast(message, type) {
+        var toast = document.createElement('div');
+        var toastClasses = 'toast align-items-center text-white ';
 
-            toast.addEventListener('hidden.bs.toast', function () {
-                toast.remove();
-            });
-
-            document.getElementById('toastContainer').appendChild(toast);
-            return toast;
+        switch(type) {
+            case 'success':
+                toastClasses += 'bg-success';
+                break;
+            case 'error':
+                toastClasses += 'bg-danger';
+                break;
+            case 'info':
+                toastClasses += 'bg-warning'; // Info class addition
+                break;
+            default:
+                toastClasses += 'bg-secondary'; // Fallback class
         }
 
-        function showSuccessToast(message) {
-            var toastEl = createToast(message, true);
-            new bootstrap.Toast(toastEl, { delay: 5000 }).show();
-        }
+        toast.className = toastClasses;
+        toast.role = 'alert';
+        toast.ariaLive = 'assertive';
+        toast.ariaAtomic = 'true';
+        toast.innerHTML = `
+    <div class="d-flex">
+        <div class="toast-body">${message}</div>
+    </div>
+`;
 
-        function showErrorToast(message) {
-            var toastEl = createToast(message, false);
-            new bootstrap.Toast(toastEl, { delay: 10000 }).show();
-        }
+        toast.addEventListener('hidden.bs.toast', function () {
+            toast.remove();
+        });
 
-        // Example usage
-        // showSuccessToast('This is a success message!');
-        // showErrorToast('This is an error message!');
-    </script>
+        document.getElementById('toastContainer').appendChild(toast);
+        return toast;
+    }
+
+    function showSuccessToast(message) {
+        var toastEl = createToast(message, 'success');
+        new bootstrap.Toast(toastEl, { delay: 5000 }).show();
+    }
+
+    function showErrorToast(message) {
+        var toastEl = createToast(message, 'error');
+        new bootstrap.Toast(toastEl, { delay: 10000 }).show();
+    }
+
+    function showInfoToast(message) {
+        var toastEl = createToast(message, 'info');
+        new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
+    }
+
+    // Example usage
+    // showSuccessToast('This is a success message!');
+    // showErrorToast('This is an error message!');
+    // showInfoToast('This is an informational message!');
+</script>
+
 
     <!-- TOAST END -->
 

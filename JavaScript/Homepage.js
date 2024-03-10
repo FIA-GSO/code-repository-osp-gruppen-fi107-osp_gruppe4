@@ -129,105 +129,189 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-        async function showGroupInfoModal(event) {
-            // Retrieve data from the clicked group
-            const title = this.dataset.title;
-            const description = this.dataset.description;
-            const ownerId = this.dataset.ownerId;
-            const groupId = this.dataset.groupId; // Make sure this is set correctly
-        
-            // Show preliminary data in the modal
-            document.getElementById('groupInfoModalLabel').textContent = title;
-            document.getElementById('groupDescription').textContent = description;
-            document.getElementById('groupOwner').textContent = 'Loading...';
-        
-            // Fetch the owner's name using ownerId and update the modal
-            const ownerName = await fetchOwnerName(ownerId);
-            document.getElementById('groupOwner').textContent = `Owner: ${ownerName}`;
-        
-            // Fetch group members and update the modal
-            const members = await fetchGroupMembers(groupId);
-            const membersList = document.getElementById('groupMembersList');
-            membersList.innerHTML = ''; // Clear previous member list entries
-            members.forEach(member => {
-                const memberItem = document.createElement('li');
-                memberItem.textContent = ` Name: ${member.name}, User ID: ${member.userID}, Joined: ${member.startingDate}`;
-                membersList.appendChild(memberItem);
+    async function showGroupInfoModal(event) {
+        // Retrieve data from the clicked group
+        const title = this.dataset.title;
+        const description = this.dataset.description;
+        const ownerId = this.dataset.ownerId;
+        const groupId = this.dataset.groupId; // Make sure this is set correctly
+
+        // Show preliminary data in the modal
+        document.getElementById('groupInfoModalLabel').textContent = title;
+        document.getElementById('groupDescription').textContent = description;
+
+        // Fetch group members and update the modal
+        const members = await fetchGroupMembers(groupId);
+        const membersList = document.getElementById('groupMembersList');
+        membersList.innerHTML = ''; // Vorherige Einträge löschen
+        members.forEach(member => {
+            const memberItem = document.createElement('li');
+            memberItem.style.listStyleType = 'none'; // Entfernt die Listensymbole für ein saubereres Design
+            memberItem.style.padding = '10px'; // Fügt etwas Abstand innerhalb jedes Listenelements hinzu
+            memberItem.style.borderBottom = '1px solid #eee'; // Fügt eine Trennlinie zwischen den Mitgliedern hinzu
+            memberItem.style.display = 'flex'; // Verwendet Flexbox für ein flexibles Layout
+            memberItem.style.alignItems = 'center'; // Zentriert die Elemente vertikal
+            memberItem.style.paddingLeft = '0px';
+
+            // Bild des Mitglieds hinzufügen
+            const memberImage = new Image();
+            memberImage.src = member.profilePicture;
+            memberImage.style.width = '40px'; // Größe des Profilbilds anpassen
+            memberImage.style.height = '40px';
+            memberImage.style.borderRadius = '50%'; // Runde Bilder
+            memberImage.style.marginRight = '15px'; // Fügt einen rechten Abstand zum Bild hinzu
+
+
+            // Erstellt das Badge-Element
+            const badge = document.createElement('span');
+            badge.classList.add('badge');
+            const now = new Date();
+            const joinedDate = new Date(member.startingDate);
+            const hoursSinceJoined = Math.abs(now - joinedDate) / 36e5; // Umrechnung in Stunden
+            if (String(member.userID) === String(ownerId)) {
+                // Eigentümer
+                badge.classList.add('bg-primary'); // Bootstrap blau für Eigentümer
+                badge.textContent = 'Eigentümer';
+            } else if (hoursSinceJoined <= 72) {
+                // Neues Mitglied
+                badge.classList.add('bg-secondary'); // Leichtes Blau für neue Mitglieder
+                badge.textContent = 'Neu';
+            }
+            
+            // Optional: Anpassen des Stils des Badges (falls benötigt)
+            badge.style.marginLeft = '5px';
+            // Fügt das Badge-Element vor dem Namen hinzu
+
+            
+            const memberName = document.createElement('span');
+            memberName.textContent = member.name;
+            memberName.style.fontWeight = 'bold'; // Macht den Namen fett
+            // memberName.style.flexGrow = '1'; 
+            // Lässt den Namen den verfügbaren Platz ausfüllen
+
+            const placeholder = document.createElement('span');
+            placeholder.style.flexGrow = '1'; // Fügt einen flexiblen Platzhalter hinzu
+
+            const memberJoinedDate = document.createElement('span');
+            memberJoinedDate.textContent = new Date(member.startingDate).toLocaleDateString();
+            memberJoinedDate.style.fontSize = '0.8em'; // Macht das Datum etwas kleiner
+            memberJoinedDate.style.color = '#666'; // Verwendet eine dezente Farbe für das Datum
+
+            // Tooltip hinzufügen
+            memberJoinedDate.textContent = joinedDate.toLocaleDateString();
+            memberJoinedDate.setAttribute('title', `Beigetreten am ${joinedDate.toLocaleDateString()} ${joinedDate.toLocaleTimeString()}`);
+            memberJoinedDate.setAttribute('data-toggle', 'tooltip');
+
+            // Fügt die erstellten Elemente zum Listenelement hinzu
+            memberItem.appendChild(memberImage);
+            memberItem.appendChild(memberName);
+            memberItem.appendChild(badge);
+            memberItem.appendChild(placeholder);
+            memberItem.appendChild(memberJoinedDate);
+
+            memberItem.classList.add('no-padding');
+
+
+            // Fügt das Listenelement zur Liste hinzu
+            membersList.appendChild(memberItem);
+        });
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip(); // Initialisiert alle Tooltips auf der Seite
+        });
+
+        // Modal anzeigen
+        $('#groupInfoModal').modal('show');
+    }
+
+
+    async function fetchGroupMembers(groupId) {
+        try {
+            const response = await fetch(`${BASE_URL}/members_of_group/${groupId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
             });
-        
-            // Finally, show the modal
-            $('#groupInfoModal').modal('show');
-        }
-        
-        
-        async function fetchGroupMembers(groupId) {
-            try {
-                const response = await fetch(`${BASE_URL}/members_of_group/${groupId}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-        
-                if (response.ok) {
-                    const members = await response.json();
-                    // Verwende Promise.all, um alle Namen parallel abzurufen
-                    const memberDetails = await Promise.all(members.map(async (member) => {
-                        // Abrufen des Namens für jede UserID
-                        const name = await fetchUserName(member.userID);
-                        return { ...member, name }; // Ergänze das Mitglied-Objekt um den Namen
-                    }));
-                    return memberDetails;
-                } else {
-                    console.error('Failed to fetch group members');
-                    return [];
-                }
-            } catch (error) {
-                console.error('Error fetching group members', error);
+
+            if (response.ok) {
+                const members = await response.json();
+                const memberDetails = await Promise.all(members.map(async (member) => {
+                    const name = await fetchUserName(member.userID);
+                    const profilePicture = await fetchProfilePictureUrl(member.userID); // Angenommen, diese Funktion ist definiert
+                    return { ...member, name, profilePicture };
+                }));
+                return memberDetails;
+            } else {
+                console.error('Failed to fetch group members');
                 return [];
             }
+        } catch (error) {
+            console.error('Error fetching group members', error);
+            return [];
         }
-        
-        
-        async function fetchUserName(userId) {
-            try {
-                const response = await fetch(`${BASE_URL}/users/${userId}`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    return data.firstName; // oder fullName, falls verfügbar
-                } else {
-                    console.error('Failed to fetch user');
-                    return 'Unknown User';
-                }
-            } catch (error) {
-                console.error('Error fetching user', error);
+    }
+
+    async function fetchProfilePictureUrl(userId) {
+        let adminToken = localStorage.getItem('jwtToken');
+        let profilePictureUrl = `https://lbv.digital/profile_picture/${userId}`;
+        try {
+            const response = await fetch(profilePictureUrl, {
+                headers: { 'Authorization': `Bearer ${adminToken}` }
+            });
+            if (response.ok) {
+                const imageBlob = await response.blob();
+                return URL.createObjectURL(imageBlob);
+            } else {
+                return 'default-profile-picture-url'; // URL zu einem Standardprofilbild
+            }
+        } catch (error) {
+            console.error('Error fetching profile picture:', error);
+            return 'default-profile-picture-url';
+        }
+    }
+
+
+
+    async function fetchUserName(userId) {
+        try {
+            const response = await fetch(`${BASE_URL}/users/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                return data.firstName; // oder fullName, falls verfügbar
+            } else {
+                console.error('Failed to fetch user');
                 return 'Unknown User';
             }
+        } catch (error) {
+            console.error('Error fetching user', error);
+            return 'Unknown User';
         }
-        
-        async function fetchOwnerName(ownerId) {
-            try {
-                const response = await fetch(`${BASE_URL}/users/${ownerId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-        
-                if (response.ok) {
-                    const data = await response.json();
-                    return `${data.firstName}`; // Assuming you just want the first name
-                } else {
-                    console.error('Owner not found');
-                    return 'Owner not found'; // Return a default message or handle accordingly
+    }
+
+    async function fetchOwnerName(ownerId) {
+        try {
+            const response = await fetch(`${BASE_URL}/users/${ownerId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-            } catch (error) {
-                console.error('Failed to fetch owner', error);
-                return 'Failed to load owner'; // Return a default error message
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return `${data.firstName}`; // Assuming you just want the first name
+            } else {
+                console.error('Owner not found');
+                return 'Owner not found'; // Return a default message or handle accordingly
             }
+        } catch (error) {
+            console.error('Failed to fetch owner', error);
+            return 'Failed to load owner'; // Return a default error message
         }
-        
+    }
+
 
     function joinGroup(groupId) {
         // Daten für den Beitritt zur Gruppe vorbereiten

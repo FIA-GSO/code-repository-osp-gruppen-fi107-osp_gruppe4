@@ -110,9 +110,8 @@
 
 
     /* Custom CSS for an extra-large modal */
-.modal-xl {
+/* .modal-xl {
   max-width: 70%; /* Adjust this value according to your needs */
-}
 
 /* Custom styles for the modal to make it look like a card */
 .modal-content {
@@ -150,4 +149,8 @@
 .modal-body .bi {
   margin-right: 5px; /* Space between icon and text */
   color: #000000; /* Bootstrap primary color for icons */
+}
+.no-padding {
+  padding-left: 0 !important; /* Verwendet !important, um sicherzustellen, dass dieser Stil Vorrang hat */
+  padding-right: 0 !important;
 }

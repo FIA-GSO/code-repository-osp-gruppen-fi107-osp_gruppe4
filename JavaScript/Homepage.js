@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             membersList.innerHTML = ''; // Clear previous member list entries
             members.forEach(member => {
                 const memberItem = document.createElement('li');
-                memberItem.textContent = `User ID: ${member.userID}, Joined: ${member.startingDate}`;
+                memberItem.textContent = ` Name: ${member.name}, User ID: ${member.userID}, Joined: ${member.startingDate}`;
                 membersList.appendChild(memberItem);
             });
         
@@ -164,27 +164,48 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(`${BASE_URL}/members_of_group/${groupId}`, {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        // Include your authorization header here if needed
-                        // 'Authorization': 'Bearer ' + YOUR_TOKEN_HERE
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
         
                 if (response.ok) {
                     const members = await response.json();
-                    return members; // Returns the array of members
+                    // Verwende Promise.all, um alle Namen parallel abzurufen
+                    const memberDetails = await Promise.all(members.map(async (member) => {
+                        // Abrufen des Namens für jede UserID
+                        const name = await fetchUserName(member.userID);
+                        return { ...member, name }; // Ergänze das Mitglied-Objekt um den Namen
+                    }));
+                    return memberDetails;
                 } else {
                     console.error('Failed to fetch group members');
-                    return []; // Return an empty array or handle accordingly
+                    return [];
                 }
             } catch (error) {
                 console.error('Error fetching group members', error);
-                return []; // Return an empty array as a fallback
+                return [];
             }
         }
         
-
+        
+        async function fetchUserName(userId) {
+            try {
+                const response = await fetch(`${BASE_URL}/users/${userId}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.firstName; // oder fullName, falls verfügbar
+                } else {
+                    console.error('Failed to fetch user');
+                    return 'Unknown User';
+                }
+            } catch (error) {
+                console.error('Error fetching user', error);
+                return 'Unknown User';
+            }
+        }
+        
         async function fetchOwnerName(ownerId) {
             try {
                 const response = await fetch(`${BASE_URL}/users/${ownerId}`, {

@@ -146,75 +146,77 @@ document.addEventListener('DOMContentLoaded', () => {
         membersList.innerHTML = ''; // Vorherige Einträge löschen
         members.forEach(member => {
             const memberItem = document.createElement('li');
-            memberItem.style.listStyleType = 'none'; // Entfernt die Listensymbole für ein saubereres Design
-            memberItem.style.padding = '10px'; // Fügt etwas Abstand innerhalb jedes Listenelements hinzu
-            memberItem.style.borderBottom = '1px solid #eee'; // Fügt eine Trennlinie zwischen den Mitgliedern hinzu
-            memberItem.style.display = 'flex'; // Verwendet Flexbox für ein flexibles Layout
-            memberItem.style.alignItems = 'center'; // Zentriert die Elemente vertikal
+            memberItem.style.listStyleType = 'none';
+            memberItem.style.padding = '10px';
+            memberItem.style.borderBottom = '1px solid #eee';
+            memberItem.style.display = 'flex';
+            memberItem.style.alignItems = 'center';
             memberItem.style.paddingLeft = '0px';
-
+        
             // Bild des Mitglieds hinzufügen
             const memberImage = new Image();
             memberImage.src = member.profilePicture;
-            memberImage.style.width = '40px'; // Größe des Profilbilds anpassen
+            memberImage.style.width = '40px';
             memberImage.style.height = '40px';
-            memberImage.style.borderRadius = '50%'; // Runde Bilder
-            memberImage.style.marginRight = '15px'; // Fügt einen rechten Abstand zum Bild hinzu
-
-
-            // Erstellt das Badge-Element
-            const badge = document.createElement('span');
-            badge.classList.add('badge');
+            memberImage.style.borderRadius = '50%';
+            memberImage.style.marginRight = '15px';
+        
+            // Neuen Mechanismus für Badges vorbereiten
+            const badgesContainer = document.createElement('div');
+            badgesContainer.style.display = 'flex';
+            badgesContainer.style.flexDirection = 'row';
+            badgesContainer.style.alignItems = 'center';
+            badgesContainer.style.flexWrap = 'wrap';
+        
+            // Eigentümer- und Neu-Badge Bedingungen
             const now = new Date();
             const joinedDate = new Date(member.startingDate);
-            const hoursSinceJoined = Math.abs(now - joinedDate) / 36e5; // Umrechnung in Stunden
-            if (String(member.userID) === String(ownerId)) {
-                // Eigentümer
-                badge.classList.add('bg-primary'); // Bootstrap blau für Eigentümer
-                badge.textContent = 'Eigentümer';
-            } else if (hoursSinceJoined <= 72) {
-                // Neues Mitglied
-                badge.classList.add('bg-secondary'); // Leichtes Blau für neue Mitglieder
-                badge.textContent = 'Neu';
-            }
-            
-            // Optional: Anpassen des Stils des Badges (falls benötigt)
-            badge.style.marginLeft = '5px';
-            // Fügt das Badge-Element vor dem Namen hinzu
+            const hoursSinceJoined = Math.abs(now - joinedDate) / 36e5;
 
-            
+                console.log('groupId', groupId);
+            console.log('ownerId', ownerId);
+            console.log('member.userID', member.userID);
+
+
+        
+            if (String(member.userID) === String(ownerId)) {
+                const ownerBadge = createBadge('Eigentümer', 'bg-primary');
+                badgesContainer.appendChild(ownerBadge);
+            }
+            if (hoursSinceJoined <= 72) {
+                const newMemberBadge = createBadge('Neu', 'bg-secondary');
+                badgesContainer.appendChild(newMemberBadge);
+            }
+        
             const memberName = document.createElement('span');
             memberName.textContent = member.name;
-            memberName.style.fontWeight = 'bold'; // Macht den Namen fett
-            // memberName.style.flexGrow = '1'; 
-            // Lässt den Namen den verfügbaren Platz ausfüllen
-
+            memberName.style.fontWeight = 'bold';
+        
             const placeholder = document.createElement('span');
-            placeholder.style.flexGrow = '1'; // Fügt einen flexiblen Platzhalter hinzu
-
+            placeholder.style.flexGrow = '1';
+        
             const memberJoinedDate = document.createElement('span');
-            memberJoinedDate.textContent = new Date(member.startingDate).toLocaleDateString();
-            memberJoinedDate.style.fontSize = '0.8em'; // Macht das Datum etwas kleiner
-            memberJoinedDate.style.color = '#666'; // Verwendet eine dezente Farbe für das Datum
-
-            // Tooltip hinzufügen
             memberJoinedDate.textContent = joinedDate.toLocaleDateString();
+            memberJoinedDate.style.fontSize = '0.8em';
+            memberJoinedDate.style.color = '#666';
             memberJoinedDate.setAttribute('title', `Beigetreten am ${joinedDate.toLocaleDateString()} ${joinedDate.toLocaleTimeString()}`);
             memberJoinedDate.setAttribute('data-toggle', 'tooltip');
-
+        
             // Fügt die erstellten Elemente zum Listenelement hinzu
             memberItem.appendChild(memberImage);
             memberItem.appendChild(memberName);
-            memberItem.appendChild(badge);
+            memberItem.appendChild(badgesContainer); // Fügt den Container für Badges hinzu
             memberItem.appendChild(placeholder);
             memberItem.appendChild(memberJoinedDate);
-
+        
             memberItem.classList.add('no-padding');
-
-
+        
             // Fügt das Listenelement zur Liste hinzu
             membersList.appendChild(memberItem);
         });
+        
+
+        
 
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip(); // Initialisiert alle Tooltips auf der Seite
@@ -224,6 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#groupInfoModal').modal('show');
     }
 
+    function createBadge(text, className) {
+        const badge = document.createElement('span');
+        badge.classList.add('badge', className);
+        badge.textContent = text;
+        badge.style.marginLeft = '5px';
+        return badge;
+    }
 
     async function fetchGroupMembers(groupId) {
         try {

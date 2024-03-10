@@ -38,6 +38,24 @@ body {
   .profile-wrapper {
     position: relative;
   }
+
+  #profilePicture {
+    /* Add shadow */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    /* Add transition for smooth animation */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 48px; 
+    width: 48px; 
+  }
+
+  #profilePicture:hover {
+    /* Enlarge on hover */
+    transform: scale(1.1);
+
+    /* Increase shadow size on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
   
   .impressum{
     color: #000000;

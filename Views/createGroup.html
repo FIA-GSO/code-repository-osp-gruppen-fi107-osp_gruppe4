@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../CSS/createGroup.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../CSS/dashboard.css">
   <link rel="stylesheet" href="../CSS/HeaderFooter.css">
-  <link rel="icon" type="image/png" href="instance/Screenshot 2024-02-02 095135.png">
+  <link rel="shortcut icon" href="../Views/instance/favicon.ico">
   <title>LBV - Gruppen</title>
   <style>
     /* Hier können Sie zusätzliche CSS-Stile hinzufügen, falls erforderlich */
@@ -19,34 +21,30 @@
     <nav>
       <a href="Homepage.html">Alle Gruppen</a>
       <a href="#">Meine Gruppen</a>
-      <div class="profile-wrapper">
-        <div class="profile-circle" onclick="toggleDropdown()">
-          <img src="../Views/instance/default_profile_picture.jpg" alt="Profile Image">
+      
+      <!-- Dropdown for profile picture and other options -->
+      <div class="dropdown">
+        <img id="profilePicture" class="rounded-circle dropdown-toggle"
+          style="height: 38px; width: 38px; object-fit: cover; cursor: pointer;" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" alt="Profile Picture" title="Profiloptionen" draggable="false"
+          src="https://via.placeholder.com/150">
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="profil.html" style="margin: 0 0;">
+            <i class="bi bi-person-circle mr-2"></i>Profil
+          </a>
+          <a class="dropdown-item" href="https://github.com/jexxme/groupManagementAPI/blob/main/readme.md"
+            target="_blank" style="margin: 0 0;">
+            <i class="bi bi-file-earmark-text mr-2"></i>Dokumentation
+          </a>
+          <a id="adminPanel" class="dropdown-item" href="https://lbv.digital/" target="_blank" style="margin: 0 0;">
+            <i class="bi bi-gear mr-2"></i>Admin Panel
+          </a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item text-danger" id="logoutButton">
+            <i class="bi bi-box-arrow-right mr-2"></i>Ausloggen
+          </button>
         </div>
-        <!--<div class="dropdown" id="dropdown">
-          <a href="#">Profil</a>
-          <a href="#">Einstellungen</a>
-          <a href="login.html">Ausloggen</a>
-        </div> -->
-        <div class="dropdown">
-          <img id="profilePicture" class="rounded-circle dropdown-toggle"
-              style="height: 38px; width: 38px; object-fit: cover; cursor: pointer;" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false" alt="Profile Picture" title="Profiloptionen"
-              draggable="false">
-          <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item" href="/Views/profil.html" data-toggle="modal" data-target="#profilePictureModal">
-                  <i class="bi bi-person-circle mr-2"></i>Profil
-              </a>
-              <a class="dropdown-item" href="https://github.com/jexxme/groupManagementAPI/blob/main/readme.md"
-                  target="_blank">
-                  <i class="bi bi-file-earmark-text mr-2"></i>Einstellungen
-              </a>
-              <div class="dropdown-divider"></div>
-              <button class="dropdown-item text-danger" id="logoutButton">
-                  <i class="bi bi-box-arrow-right mr-2"></i>Ausloggen
-              </button>
-          </div>
-      </div>
+
       </div>
     </nav>
   </header>
@@ -75,5 +73,16 @@
     var dropdown = document.getElementById('dropdown');
     dropdown.classList.toggle('active');
   }</script>
+    <script src="../JavaScript/Homepage.js"></script>
+    <script src="../JavaScript/fetch_pb.js"></script>
+    <script src="../JavaScript/headerFooter.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+      </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous">
+      </script>
+  </body>
   </body>
 </html>

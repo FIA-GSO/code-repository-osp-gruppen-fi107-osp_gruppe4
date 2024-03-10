@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+        integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+            background-color: #f4f4f4;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: flex-start;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 35rem;
+        }
+
+        .profile-picture-container {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+
+        .button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            /* subtract padding */
+        }
+
+        .warning {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #DC3545
+;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            /* subtract padding */
+        }
+
+        .profile-info {
+            padding: 40px;
+            flex-grow: 1;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: #666;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .pp {
+            padding: 10px 10px;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #f4f4f4;
+            background-size: cover;
+            background-position: center;
+            /* shadow */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div class="profile-card">
+        <div class="profile-picture-container">
+            <!-- <div class="profile-picture"></div> -->
+            <img id="profilePicture" class="rounded-circle profile-picture"
+                style="object-fit: cover;" alt="Profile Picture" draggable="false" src="https://via.placeholder.com/150">
+            <button class="button pp" href="#" data-toggle="modal" data-target="#profilePictureModal"
+                style="background-color: #6c757d;">Bild ändern</button>
+        </div>
+        <div class="profile-info">
+            <h3 id="name">Max Mustermann <a class="bi bi-pencil" onclick="editName()" style="cursor: pointer;"></a></h3>
+            <p id="email">max.muster@muster.com</p>
+            <button class="button" onclick="editPassword()">Passwort ändern</button>
+            <button class="button warning" onclick="showDeleteAccountModal()">Konto löschen</button>
+        </div>
+    </div>
+
+    <!-- Bootstrap Modal for change password-->
+    <div class="modal fade" id="editNameModal" tabindex="-1" aria-labelledby="editNameModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editNameModalLabel">Name ändern</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="editNameForm">
+                        <div class="mb-3">
+                            <label for="nameInput" class="form-label">Aktueller Name</label>
+                            <input type="text" class="form-control" id="nameInput" value="">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hideModal()">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" onclick="updateName()">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Function to open the modal and display the current name
+        function editName() {
+            var nameElement = document.getElementById('name');
+            var currentName = nameElement.childNodes[0].nodeValue.trim(); // Get only the text node value
+            var nameInput = document.getElementById('nameInput');
+            nameInput.value = currentName; // Set the current name in the input field
+            var editNameModal = new bootstrap.Modal(document.getElementById('editNameModal'));
+            editNameModal.show(); // Open the modal
+
+            // Add event listener for the Enter key
+            nameInput.onkeypress = function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();  // Prevent the default form submit action
+                    updateName();  // Call updateName function
+                }
+            };
+        }
+
+        // Function to update the name (you would need to add the actual update logic)
+        async function updateName() {
+            var newName = document.getElementById('nameInput').value;
+            var nameElement = document.getElementById('name');
+            // Replace only the text node value, not the entire HTML content
+            if (nameElement.childNodes[0].nodeType === Node.TEXT_NODE) {
+                nameElement.childNodes[0].nodeValue = newName + ' '; // Ensure to add a space before the pencil icon
+            }
+
+            // Retrieve userId and jwtToken from localStorage
+            var userId = localStorage.getItem('userId');
+            var jwtToken = localStorage.getItem('jwtToken');
+
+            // Construct the request URL
+            var url = `https://lbv.digital/users/${userId}`;
+
+            try {
+                // Make the PUT request to update the name
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}` // Assuming the token is a Bearer token
+                    },
+                    body: JSON.stringify({ firstName: newName }) // Assuming the API expects a JSON body with the new name
+                });
+
+                if (response.ok) {
+                    console.log('Name updated successfully');
+                    showSuccessToast('Name erfolgreich geändert!');
+
+                    // Update the name in localStorage
+                    localStorage.setItem('firstName', newName);
+
+                    // Hide the modal after successful update
+                    var editNameModal = bootstrap.Modal.getInstance(document.getElementById('editNameModal'));
+                    editNameModal.hide();
+                } else {
+                    console.error('Failed to update name', await response.text());
+                    showErrorToast('Fehler beim Ändern des Namens!');
+                }
+            } catch (error) {
+                console.error('Error during the update request:', error);
+                showErrorToast('Fehler beim Ändern des Namens!');
+            }
+        }
+
+        // Function to hide the modal
+        function hideModal() {
+            var editNameModal = bootstrap.Modal.getInstance(document.getElementById('editNameModal'));
+            editNameModal.hide(); // Close the modal
+        }
+
+    </script>
+
+
+
+    <!-- Bootstrap Modal for Changing Password -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Passwort ändern</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Neues Passwort</label>
+                            <input type="password" class="form-control" id="newPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmNewPassword" class="form-label">Neues Passwort bestätigen</label>
+                            <input type="password" class="form-control" id="confirmNewPassword">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hideModal()">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" onclick="updatePassword()">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function editPassword() {
+            var changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+            changePasswordModal.show();
+        }
+
+        async function updatePassword() {
+            // Get the values from the form
+            var newPassword = document.getElementById('newPassword').value;
+            var confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            // Check if the new passwords match
+            if (newPassword !== confirmNewPassword) {
+                showErrorToast('Die Passwörter stimmen nicht überein!');
+                return; // Exit the function if the passwords don't match
+            }
+
+            // Retrieve userId and jwtToken from localStorage
+            var userId = localStorage.getItem('userId');
+            var jwtToken = localStorage.getItem('jwtToken');
+
+            // Construct the request URL
+            var url = `https://lbv.digital/users/${userId}`;
+
+            try {
+                // Make the PUT request to update the password
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwtToken}` // Assuming the token is a Bearer token
+                    },
+                    body: JSON.stringify({ password: newPassword }) // Send the new password
+                });
+
+                if (response.ok) {
+                    console.log('Password updated successfully');
+                    showSuccessToast('Passwort erfolgreich geändert!');
+
+                    // Clear the password fields
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmNewPassword').value = '';
+
+                    // Hide the modal after successful update
+                    var changePasswordModal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+                    changePasswordModal.hide();
+                } else {
+                    console.error('Failed to update password', await response.text());
+                    showErrorToast('Fehler beim Ändern des Passworts!');
+                }
+            } catch (error) {
+                console.error('Error during the update request:', error);
+                showErrorToast('Fehler beim Ändern des Passworts!');
+            }
+        }
+    </script>
+
+
+
+
+
+
+
+    <script>
+        // Function to manually hide the modal
+        function hideModal() {
+            var editNameModal = bootstrap.Modal.getInstance(document.getElementById('editNameModal'));
+            if (editNameModal) {
+                editNameModal.hide();
+            }
+            var changePasswordModal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+            if (changePasswordModal) {
+                changePasswordModal.hide();
+            }
+        }
+    </script>
+
+
+    <!-- Read the localStorage item "jwtToken" and get Name and Email from there to set on page load-->
+    <script>
+        // Get the JWT token from localStorage
+        var jwtToken = localStorage.getItem('jwtToken');
+        if (jwtToken) {
+            // Decode the JWT token to get the payload
+            var payload = JSON.parse(atob(jwtToken.split('.')[1]));
+            // Set the name and email on page load
+            console.log(payload);
+            document.getElementById('email').innerText = payload.email;
+        }
+        // Get the name from localStorage "firstName"
+        var name = localStorage.getItem('firstName');
+        if (name) {
+            var nameElement = document.getElementById('name');
+            // Ensure the element has at least one child node to safely modify the first child
+            if (nameElement.childNodes.length > 0 && nameElement.childNodes[0].nodeType === Node.TEXT_NODE) {
+                // Update only the text node value, preserving any following elements (like the pencil icon)
+                nameElement.childNodes[0].nodeValue = name + ' '; // Add a space before the icon
+            } else {
+                // If the first child is not a text node, prepend a new text node with the name and a space
+                var textNode = document.createTextNode(name + ' '); // Create a text node with a space
+                nameElement.insertBefore(textNode, nameElement.firstChild); // Insert before the first child
+            }
+        }
+
+    </script>
+
+
+    <!-- PROFILE PICTURE ROUND PREVIEW -->
+
+    <script>
+        // Function to fetch and display the profile picture
+        function fetchProfilePicture() {
+            // Get the user ID from the JWT token
+            let adminToken = localStorage.getItem('jwtToken');
+
+            // Get the user ID from localStorage
+            let userId = localStorage.getItem('userId');
+
+            // API endpoint to fetch the profile picture
+            let profilePictureUrl = `https://lbv.digital/profile_picture/${userId}`;
+
+            // Fetch the profile picture
+            fetch(profilePictureUrl, {
+                headers: { 'Authorization': `Bearer ${adminToken}` }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob(); // If image is found, response will be a blob
+                    } else {
+                        throw new Error('Profilbild nicht gefunden');
+                    }
+                })
+                .then(imageBlob => {
+                    // Convert the blob to a URL and set it as the src of the image element
+                    let imageUrl = URL.createObjectURL(imageBlob);
+                    document.getElementById('profilePicture').src = imageUrl;
+
+                    // Also set the src of the image preview in the modal
+                    document.getElementById('imagePreview').src = imageUrl;
+
+                    const imgContainer = document.querySelector('.img-container');
+                    imgContainer.style.display = 'block'; // Display the image container
+                    imagePreview.style.display = 'block'; // Display the image preview
+
+                    // Set height and width of the image preview to 400px
+                    imagePreview.style.height = '400px';
+                    imagePreview.style.width = '400px';
+
+
+
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                });
+        }
+
+        // Call the function on page load or at a suitable time
+        fetchProfilePicture();
+    </script>
+
+
+
+    <!-- CHANGE PROFILE PICTURE -->
+
+    <!-- Profilbild -->
+    <style>
+        .img-container {
+            max-height: 400px;
+            /* Anpassen basierend auf der Modalgröße */
+            overflow: hidden;
+            /* Scrollen hinzufügen, wenn das Bild zu hoch ist */
+            max-width: 100%;
+            display: none;
+            /* Hide the container by default */
+        }
+    </style>
+
+    <div class="modal fade" id="profilePictureModal" tabindex="-1" role="dialog"
+        aria-labelledby="profilePictureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profilePictureModalLabel">Profilbild aktualisieren</h5>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center">
+                    <div class="img-container" style="display: none;">
+                        <img id="imagePreview" src="#" alt="Dein Profilbild" style="display: none;">
+                    </div>
+                    <input type="file" id="profilePictureInput" accept="image/jpeg, image/jpg, image/png" hidden>
+                    <button class="btn btn-primary mt-3"
+                        onclick="document.getElementById('profilePictureInput').click();">
+                        Bild auswählen
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" class="close" data-dismiss="modal" >Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="saveProfilePicture">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cropper;
+        document.getElementById('profilePictureInput').addEventListener('change', function (event) {
+            const [file] = event.target.files;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imagePreview = document.getElementById('imagePreview');
+                    const imgContainer = document.querySelector('.img-container');
+                    imagePreview.src = e.target.result;
+                    imgContainer.style.display = 'block'; // Display the image container
+                    imagePreview.style.display = 'block'; // Display the image preview
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(imagePreview, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        scalable: false,
+                        zoomable: false,
+                        minContainerHeight: 400, // Mindesthöhe für den Container festlegen
+                        minCanvasHeight: 400, // Mindesthöhe für die Leinwand festlegen
+                    });
+
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('saveProfilePicture').addEventListener('click', function () {
+            if (cropper) {
+                // Get cropped image data as a data URL
+                const croppedImageData = cropper.getCroppedCanvas().toDataURL();
+                // Convert data URL to blob
+                fetch(croppedImageData)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        // Create form data
+                        const formData = new FormData();
+                        formData.append('file', blob, 'profile_picture.png'); // Second parameter is the blob, third parameter is filename
+
+                        // Get user ID from JWT token
+                        const adminToken = localStorage.getItem('jwtToken');
+                        const decodedToken = jwt_decode(adminToken); // Use a suitable JWT decode library
+                        const userId = decodedToken.user_id; // Adjust this according to your token structure
+
+                        // Append user ID to form data
+                        formData.append('user_id', userId);
+
+                        // Make the POST request to the server
+                        fetch('https://lbv.digital/upload_profile_picture', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${adminToken}`
+                            },
+                            body: formData
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    showErrorToast(response.statusText);
+                                    showErrorToast('Fehler beim Hochladen des Profilbildes. (Maximale Dateigröße: 3 MB)');
+                                    throw new Error('Fehler beim Hochladen des Profilbildes');
+
+                                }
+                            })
+                            .then(data => {
+                                // close the modal
+                                $('#profilePictureModal').modal('hide');
+                                // Display success toast
+                                showSuccessToast(data.message);
+
+                                // Update the profile picture
+                                fetchProfilePicture();
+
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                showErrorToast('Fehler beim Hochladen des Profilbildes. (Maximale Dateigröße: 3 MB)');
+                            });
+                    });
+            }
+        });
+    </script>
+
+
+<!-- Bootstrap Modal for Account Deletion Confirmation -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Konto löschen</h5>
+            </div>
+            <div class="modal-body">
+                <p>Bitte tippen Sie "Ich bin mir sicher!" um zu bestätigen, dass Sie Ihr Konto unwiderruflich löschen möchten.</p>
+                <input type="text" class="form-control" id="accountDeletionConfirmation" placeholder="Ich bin mir sicher!">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="hideDeleteAccountModal()">Abbrechen</button>
+                <button type="button" class="btn btn-danger" id="deleteAccountButton" disabled>Konto unwiderruflich löschen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var confirmationInput = document.getElementById('accountDeletionConfirmation');
+        var deleteButton = document.getElementById('deleteAccountButton');
+        
+        confirmationInput.addEventListener('input', function() {
+            deleteButton.disabled = this.value !== "Ich bin mir sicher!";
+        });
+
+        deleteButton.addEventListener('click', function() {
+            // Get the user ID from localStorage
+            var userId = localStorage.getItem('userId');
+            // Get the JWT token from localStorage
+            var jwtToken = localStorage.getItem('jwtToken');
+            // Construct the request URL
+            var url = `https://lbv.digital/users/${userId}`;
+            // Make the DELETE request to delete the account
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}` // Assuming the token is a Bearer token
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Account deleted successfully');
+                    showSuccessToast('Konto erfolgreich gelöscht!');
+                    showInfoToast('Sie werden in Kürze zur Anmeldeseite weitergeleitet.');
+                    // Wait for 3 seconds before redirecting to the login page
+                    setTimeout(() => {
+                        // Clear the localStorage
+                        localStorage.clear();
+                        // Redirect to the login page
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    console.error('Failed to delete account', response.statusText);
+                    showErrorToast('Fehler beim Löschen des Kontos!');
+                }
+            })
+            .catch(error => {
+                console.error('Error during the delete request:', error);
+                showErrorToast('Fehler beim Löschen des Kontos!');
+            });
+        });
+    });
+</script>
+
+<script>
+    // Function to show the modal
+    function showDeleteAccountModal() {
+        var deleteAccountModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+        deleteAccountModal.show();
+    }
+
+    // Function to hide the modal
+    function hideDeleteAccountModal() {
+        var deleteAccountModal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
+        deleteAccountModal.hide();
+    }
+</script>
+
+
+
+    <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
+
+    <div id="toastContainer">
+        <!-- Toasts will be added here -->
+    </div>
+
+
+    <style>
+        #toastContainer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            z-index: 2000;
+        }
+
+        .toast {
+            border-radius: 5px;
+            margin-top: 10px;
+            opacity: 1;
+        }
+
+        .toast-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .toast-error {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .toast-info {
+            background-color: #ff9c07;
+            color: white;
+        }
+    </style>
+
+
+<script>
+    function createToast(message, type) {
+        var toast = document.createElement('div');
+        var toastClasses = 'toast align-items-center text-white ';
+
+        switch(type) {
+            case 'success':
+                toastClasses += 'bg-success';
+                break;
+            case 'error':
+                toastClasses += 'bg-danger';
+                break;
+            case 'info':
+                toastClasses += 'bg-warning'; // Info class addition
+                break;
+            default:
+                toastClasses += 'bg-secondary'; // Fallback class
+        }
+
+        toast.className = toastClasses;
+        toast.role = 'alert';
+        toast.ariaLive = 'assertive';
+        toast.ariaAtomic = 'true';
+        toast.innerHTML = `
+    <div class="d-flex">
+        <div class="toast-body">${message}</div>
+    </div>
+`;
+
+        toast.addEventListener('hidden.bs.toast', function () {
+            toast.remove();
+        });
+
+        document.getElementById('toastContainer').appendChild(toast);
+        return toast;
+    }
+
+    function showSuccessToast(message) {
+        var toastEl = createToast(message, 'success');
+        new bootstrap.Toast(toastEl, { delay: 5000 }).show();
+    }
+
+    function showErrorToast(message) {
+        var toastEl = createToast(message, 'error');
+        new bootstrap.Toast(toastEl, { delay: 10000 }).show();
+    }
+
+    function showInfoToast(message) {
+        var toastEl = createToast(message, 'info');
+        new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
+    }
+
+    // Example usage
+    // showSuccessToast('This is a success message!');
+    // showErrorToast('This is an error message!');
+    // showInfoToast('This is an informational message!');
+</script>
+
+
+    <!-- TOAST END -->
+
+
+
+
+
+    <script src="../JavaScript/headerFooter.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+        </script>
+    <!-- Cropper.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

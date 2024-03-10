@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+  integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../CSS/dashboard.css">
   <link rel="stylesheet" href="../CSS/HeaderFooter.css">
@@ -48,27 +50,74 @@
       </div>
     </nav>
   </header>
+
+
+
+
   <main>
-    <div class="gruppen-container" id="gruppen-container">
-      <!-- Hier werden die dynamisch erstellten Gruppen eingefügt -->
+
+    <style>
+.form-card {
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 35rem;
+  margin: auto;
+  padding: 40px;
+}
+
+.form-info h2 {
+  margin-bottom: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete-button {
+  display: block;
+  margin: auto;
+  margin-top: 20px;
+}
+
+  </style>
+
+<div class="form-card">
+  <div class="form-info">
+    <h2>Neue Gruppe erstellen</h2>
+    <input type="text" id="gruppenname" placeholder="Gruppenname" class="form-input">
+    <textarea id="beschreibung" placeholder="Beschreibung" class="form-input"></textarea>
+    <input type="number" id="maxMitglieder" placeholder="Maximale Anzahl der Mitglieder" class="form-input">
+    <input type="date" id="termin" placeholder="Nächster Termin" class="form-input">
+    <div class="form-buttons">
+      <button id="abbrechenButton" class="btn btn-danger">Abbrechen</button>
+      <button id="neueGruppeErstellenButton" class="btn btn-primary">Gruppe erstellen</button>
+      <!-- <button id="zurueckButton" class="button warning">Zurück zur Übersicht</button> -->
     </div>
-    <div class="neue-gruppe">
-      <h2>Neue Gruppe erstellen</h2>
-      <input type="text" id="gruppenname" placeholder="Gruppenname">
-      <textarea id="beschreibung" placeholder="Beschreibung"></textarea>
-      <input type="number" id="maxMitglieder" placeholder="Maximale Anzahl der Mitglieder">
-      <input type="date" id="termin" placeholder="Nächster Termin">
-    </div> 
-    <!-- Buttons "Gruppe erstellen" und "Zurück zur Übersicht" -->
-    <div class="button-container">
-      <button id="neueGruppeErstellenButton">Gruppe erstellen</button>
-      <script src="../JavaScript/createGroups.js"></script>
-    </div>
-    <button class="delete-button">L</button>
+  </div>
+</div>
+<!-- <button class="button warning delete-button">L</button> -->
+
+
+
   </main>
+
+
+
   <footer>
     <button class="impressum" id="impressum" onclick="window.location.href='impressum.html'">Impressum</button>
   </footer>
+
+
   <script>    function toggleDropdown() {
     var dropdown = document.getElementById('dropdown');
     dropdown.classList.toggle('active');
@@ -76,6 +125,7 @@
     <script src="../JavaScript/Homepage.js"></script>
     <script src="../JavaScript/fetch_pb.js"></script>
     <script src="../JavaScript/headerFooter.js"></script>
+    <script src="../JavaScript/createGroups.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">

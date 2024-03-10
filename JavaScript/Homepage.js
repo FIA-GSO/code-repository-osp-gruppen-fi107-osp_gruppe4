@@ -1,24 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //const userData = JSON.parse(localStorage.getItem('currentUser'));
     const jwtToken = localStorage.getItem('jwtToken');
     if (!jwtToken) {
+        window.location.href = '/Views/login.html';
         throw new Error('JwtToken nicht gefunden im Local Storage');
     }
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-        window.location.href = '/Views/login.html';
-        throw new Error('Kein Benutzer angemeldet');
-
-    }
-
-
-    //    })
-    //console.log(token)
-    //const Vorname = userData.Vorname;
-    //const EMail = userData.email;
-    //const Admin = userData.admin;
     const BASE_URL = "https://lbv.digital";
-
     const auth = { 'Authorization': `Bearer ${jwtToken}` };
 
     var ausloggenbtn = document.getElementById('logoutButton');
@@ -131,7 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (userId == gruppe.ownerID) {
                         // Erstellen des Auflösen-Buttons
                         aktionButton.textContent = "Auflösen"
+                        // Make action button red
+                        aktionButton.style.backgroundColor = "#DC3545";
                         // Funktion muss noch implementiert werden
+                        // TODO
                     }
 
                     // hinzufügen des Gruppeninhalts

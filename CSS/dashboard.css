@@ -37,6 +37,7 @@
     .gruppen-info h3 {
       font-size: 20px;
       margin-top: 0;
+      font-weight: bold;
     }
     .gruppen-info p {
       font-size: 16px;
@@ -54,18 +55,19 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      min-width: 131px;
     }
     .gruppen-info button:hover {
       background-color: #555;
     }
     
-    .gruppen-info .button-verlassen {
+    /* .gruppen-info .button-verlassen {
       background-color: #ffc107;
     }
 
     .gruppen-info .button-verlassen:hover {
       background-color: #e6ad05;
-    }
+    } */
 
     .gruppen-info .button-aufloesen {
       background-color: #DC3545;

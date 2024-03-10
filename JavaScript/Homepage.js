@@ -71,9 +71,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     var termin = document.createElement("p");
                     termin.textContent = gruppe.termin;
+                    var userCountContainer = document.createElement("div");
+                    userCountContainer.style.width = '20%'; // Assuming you want the container to be full width
+                    userCountContainer.style.backgroundColor = '#e0e0e0';
+                    userCountContainer.style.borderRadius = '5px';
+                    userCountContainer.style.overflow = 'hidden';
+                    userCountContainer.style.position = 'relative';
+                    userCountContainer.style.display = 'flex'; // Use flexbox to align icon and progress bar
+                    userCountContainer.style.alignItems = 'center'; // Align items vertically in the center
 
-                    var nutzer = document.createElement("p");
+                    var iconContainer = document.createElement("div");
+                    iconContainer.style.backgroundColor = 'white'; // Set the background color to white
+                    iconContainer.style.borderRadius = '5px 0 0 5px'; // Rounded corners on the left side to match the userCountContainer
+                    iconContainer.style.display = 'flex';
+                    iconContainer.style.alignItems = 'center';
+                    iconContainer.style.justifyContent = 'center';
+                    iconContainer.style.padding = '0 4px'; // Padding to ensure the icon is not sticking to the edges
+                    iconContainer.style.height = '20px'; // Match the height of the progressBar
 
+                    // Create the icon element and set its classes
+                    var icon = document.createElement("i");
+                    icon.className = "bi bi-people";
+                    icon.style.webkitTextStroke = '0.5px'; // Add a 1px stroke to the icon
+                    icon.style.fontSize = '1.3em'; // Set the font size to 1.2em
+
+                    iconContainer.appendChild(icon); // Append the icon to the icon container
+                    userCountContainer.appendChild(iconContainer); // Append the icon container to the user count container
+
+                    var progressBar = document.createElement("div");
+                    progressBar.style.height = '20px'; // Set a fixed height for the progress bar
+                    progressBar.style.borderRadius = '0 5px 5px 0'; // Rounded corners on the right side
+                    progressBar.style.transition = 'width 0.5s ease-in-out'; // Smooth transition for loading
+
+                    userCountContainer.appendChild(progressBar); // Append the progress bar to the container
+
+
+                    $(userCountContainer).attr({
+                        'data-bs-toggle': 'tooltip',
+                        'data-bs-placement': 'top',
+                        'title': 'Loading...'
+                    });
+
+                    // Set the tooltip text after fetching the member count
                     try {
                         const response = await fetch(`${BASE_URL}/groups/${gruppe.groupID}/members`, {
                             method: 'GET',
@@ -82,13 +121,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (response.ok) {
                             const data = await response.json();
-                            nutzer.textContent = `${data.length}/${gruppe.maxUsers}`;
+                            const percentage = (data.length / gruppe.maxUsers) * 100;
+                            progressBar.style.width = `${percentage}%`;
+                            progressBar.style.backgroundColor = percentage < 50 ? '#347bfa' : percentage < 75 ? '#ffa500' : '#f44336'; // Blue, Orange, Red based on percentage
+                            // Update the tooltip title with the member count
+                            $(userCountContainer).attr('title', `${data.length}/${gruppe.maxUsers} Mitglieder`).tooltip('_fixTitle');
                         } else {
                             throw new Error('Nutzer der Gruppe konnten nicht gelesen werden.');
                         }
                     } catch (error) {
                         console.error(error);
                     }
+
+                    // Initialize all tooltips on the page
+                    $(function () {
+                        $('[data-bs-toggle="tooltip"]').tooltip();
+                    });
+
+
+
+
+
+
 
                     var aktionButton = document.createElement("button");
                     if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
@@ -118,7 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // HTML-Elemente anhängen (usersided)
                     gruppenInfo.appendChild(heading);
                     gruppenInfo.appendChild(beschreibung);
-                    gruppenInfo.appendChild(nutzer);
+                    // gruppenInfo.appendChild(nutzer);
+                    gruppenInfo.appendChild(userCountContainer);
                     gruppenInfo.appendChild(termin);
                     gruppenInfo.appendChild(aktionButton);
 
@@ -152,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             memberItem.style.display = 'flex';
             memberItem.style.alignItems = 'center';
             memberItem.style.paddingLeft = '0px';
-        
+
             // Bild des Mitglieds hinzufügen
             const memberImage = new Image();
             memberImage.src = member.profilePicture;
@@ -160,25 +215,25 @@ document.addEventListener('DOMContentLoaded', () => {
             memberImage.style.height = '40px';
             memberImage.style.borderRadius = '50%';
             memberImage.style.marginRight = '15px';
-        
+
             // Neuen Mechanismus für Badges vorbereiten
             const badgesContainer = document.createElement('div');
             badgesContainer.style.display = 'flex';
             badgesContainer.style.flexDirection = 'row';
             badgesContainer.style.alignItems = 'center';
             badgesContainer.style.flexWrap = 'wrap';
-        
+
             // Eigentümer- und Neu-Badge Bedingungen
             const now = new Date();
             const joinedDate = new Date(member.startingDate);
             const hoursSinceJoined = Math.abs(now - joinedDate) / 36e5;
 
-                console.log('groupId', groupId);
+            console.log('groupId', groupId);
             console.log('ownerId', ownerId);
             console.log('member.userID', member.userID);
 
 
-        
+
             if (String(member.userID) === String(ownerId)) {
                 const ownerBadge = createBadge('Eigentümer', 'bg-primary');
                 badgesContainer.appendChild(ownerBadge);
@@ -187,36 +242,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newMemberBadge = createBadge('Neu', 'bg-secondary');
                 badgesContainer.appendChild(newMemberBadge);
             }
-        
+
             const memberName = document.createElement('span');
             memberName.textContent = member.name;
             memberName.style.fontWeight = 'bold';
-        
+
             const placeholder = document.createElement('span');
             placeholder.style.flexGrow = '1';
-        
+
             const memberJoinedDate = document.createElement('span');
             memberJoinedDate.textContent = joinedDate.toLocaleDateString();
             memberJoinedDate.style.fontSize = '0.8em';
             memberJoinedDate.style.color = '#666';
             memberJoinedDate.setAttribute('title', `Beigetreten am ${joinedDate.toLocaleDateString()} ${joinedDate.toLocaleTimeString()}`);
             memberJoinedDate.setAttribute('data-toggle', 'tooltip');
-        
+
             // Fügt die erstellten Elemente zum Listenelement hinzu
             memberItem.appendChild(memberImage);
             memberItem.appendChild(memberName);
             memberItem.appendChild(badgesContainer); // Fügt den Container für Badges hinzu
             memberItem.appendChild(placeholder);
             memberItem.appendChild(memberJoinedDate);
-        
+
             memberItem.classList.add('no-padding');
-        
+
             // Fügt das Listenelement zur Liste hinzu
             membersList.appendChild(memberItem);
         });
-        
 
-        
+
+
 
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip(); // Initialisiert alle Tooltips auf der Seite

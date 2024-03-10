@@ -1,24 +1,23 @@
 let adminToken = localStorage.getItem('jwtToken');
 // Check if the token exists
-if (!adminToken) {
-    // Redirect to /login if there is no token
-    window.location.href = '/Views/login.html';
-}
 let globaleMail = localStorage.getItem('email');
 if (globaleMail) {
-    localStorage.removeItem('email')
+    localStorage.removeItem('email');
 }
+
 let globalName = localStorage.getItem('firstName');
 if (globalName) {
-    localStorage.removeItem('firstName')
+    localStorage.removeItem('firstName');
 }
+
 let globaleId = localStorage.getItem('userId');
 if (globaleId) {
-    localStorage.removeItem('userId')
+    localStorage.removeItem('userId');
 }
+
 let globaleAdmin = localStorage.getItem('isAdmin');
 if (globaleAdmin) {
-    localStorage.removeItem('isAdmin')
+    localStorage.removeItem('isAdmin');
 }
 
 document.querySelector('.form-signin').addEventListener('submit', function(event) {

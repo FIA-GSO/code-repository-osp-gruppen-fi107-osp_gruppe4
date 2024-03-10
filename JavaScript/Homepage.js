@@ -134,18 +134,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = this.dataset.title;
             const description = this.dataset.description;
             const ownerId = this.dataset.ownerId;
+            const groupId = this.dataset.groupId; // Make sure this is set correctly
         
             // Show preliminary data in the modal
-            document.getElementById('groupInfoModalLabel').textContent = title; // Set modal title to group title
+            document.getElementById('groupInfoModalLabel').textContent = title;
             document.getElementById('groupDescription').textContent = description;
-            document.getElementById('groupOwner').textContent = 'Loading...'; // Show loading state
+            document.getElementById('groupOwner').textContent = 'Loading...';
         
             // Fetch the owner's name using ownerId and update the modal
             const ownerName = await fetchOwnerName(ownerId);
-            document.getElementById('groupOwner').textContent = ownerName;
+            document.getElementById('groupOwner').textContent = `Owner: ${ownerName}`;
+        
+            // Fetch group members and update the modal
+            const members = await fetchGroupMembers(groupId);
+            const membersList = document.getElementById('groupMembersList');
+            membersList.innerHTML = ''; // Clear previous member list entries
+            members.forEach(member => {
+                const memberItem = document.createElement('li');
+                memberItem.textContent = `User ID: ${member.userID}, Joined: ${member.startingDate}`;
+                membersList.appendChild(memberItem);
+            });
         
             // Finally, show the modal
             $('#groupInfoModal').modal('show');
+        }
+        
+        
+        async function fetchGroupMembers(groupId) {
+            try {
+                const response = await fetch(`${BASE_URL}/members_of_group/${groupId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Include your authorization header here if needed
+                        // 'Authorization': 'Bearer ' + YOUR_TOKEN_HERE
+                    }
+                });
+        
+                if (response.ok) {
+                    const members = await response.json();
+                    return members; // Returns the array of members
+                } else {
+                    console.error('Failed to fetch group members');
+                    return []; // Return an empty array or handle accordingly
+                }
+            } catch (error) {
+                console.error('Error fetching group members', error);
+                return []; // Return an empty array as a fallback
+            }
         }
         
 

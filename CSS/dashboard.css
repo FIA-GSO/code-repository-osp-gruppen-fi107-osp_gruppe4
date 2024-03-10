@@ -26,10 +26,11 @@
       position: relative;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
       transition: box-shadow 0.3s ease, transform 0.3s ease;
+      /* cursor: pointer; */
     }
     .gruppen-info:hover {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for lifted effect */
-      transform: translateY(-5px); /* Slight upward movement on hover */
+      transform: translateY(-3px); /* Slight upward movement on hover */
     }
     
     .gruppen-info h3 {
@@ -57,7 +58,21 @@
       background-color: #555;
     }
     
+    .gruppen-info .button-verlassen {
+      background-color: #ffc107;
+    }
 
+    .gruppen-info .button-verlassen:hover {
+      background-color: #e6ad05;
+    }
+
+    .gruppen-info .button-aufloesen {
+      background-color: #DC3545;
+    }
+
+    .gruppen-info .button-aufloesen:hover {
+      background-color: #b02a37;
+    }
 
     footer {
       background-color: #333;

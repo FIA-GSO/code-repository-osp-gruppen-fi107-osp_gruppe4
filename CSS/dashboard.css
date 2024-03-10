@@ -47,34 +47,46 @@
       position: absolute;
       bottom: 20px;
       right: 20px;
-      background-color: #333;
-      color: #fff;
-      border: none;
+      background-color: transparent; /* Change to transparent for the outline effect */
+      color: #333; /* Typically, the text color matches the border color */
+      border: 2px solid #333; /* Add a border with the desired color */
       padding: 10px 20px;
       font-size: 16px;
       border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
       min-width: 131px;
     }
-    .gruppen-info button:hover {
-      background-color: #555;
+    
+    .gruppen-info button:hover, .gruppen-info button:focus {
+      background-color: #333; /* Background color on hover/focus */
+      color: #fff; /* Text color on hover/focus */
+      border-color: #333; /* Optional: Adjust border color on hover/focus if needed */
     }
     
-    /* .gruppen-info .button-verlassen {
-      background-color: #ffc107;
+    
+
+    .gruppen-info .button-verlassen i{
+      color: #dc3545;
     }
 
-    .gruppen-info .button-verlassen:hover {
-      background-color: #e6ad05;
-    } */
-
     .gruppen-info .button-aufloesen {
-      background-color: #DC3545;
+      background-color: #dc3545;
+      border: #b02a37;
+      color: #fff;
+    }
+
+    .gruppen-info i {
+      -webkit-text-stroke: 0.6px;
+      
     }
 
     .gruppen-info .button-aufloesen:hover {
       background-color: #b02a37;
+    }
+
+    .gruppen-info .button-beitreten i{
+      color: #28a745;
     }
 
     footer {

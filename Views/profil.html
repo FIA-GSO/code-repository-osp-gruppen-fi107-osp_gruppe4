@@ -33,12 +33,7 @@
             align-items: center;
         }
 
-        .profile-picture {
-            background-color: #ccc;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-        }
+
 
         .button {
             margin-top: 10px;
@@ -87,15 +82,32 @@
         .pp {
             padding: 10px 10px;
         }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #f4f4f4;
+            background-size: cover;
+            background-position: center;
+            /* shadow */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
     </style>
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet" />
 
 </head>
 
 <body>
     <div class="profile-card">
         <div class="profile-picture-container">
-            <div class="profile-picture"></div>
-            <button class="button pp" style="background-color: #6c757d;">Bild ändern</button>
+            <!-- <div class="profile-picture"></div> -->
+            <img id="profilePicture" class="rounded-circle profile-picture"
+                style="object-fit: cover;" alt="Profile Picture" draggable="false">
+            <button class="button pp" href="#" data-toggle="modal" data-target="#profilePictureModal"
+                style="background-color: #6c757d;">Bild ändern</button>
         </div>
         <div class="profile-info">
             <h3 id="name">Max Mustermann <a class="bi bi-pencil" onclick="editName()" style="cursor: pointer;"></a></h3>
@@ -338,10 +350,191 @@
     </script>
 
 
+    <!-- PROFILE PICTURE ROUND PREVIEW -->
+
+    <script>
+        // Function to fetch and display the profile picture
+        function fetchProfilePicture() {
+            // Get the user ID from the JWT token
+            let adminToken = localStorage.getItem('jwtToken');
+
+            // Get the user ID from localStorage
+            let userId = localStorage.getItem('userId');
+
+            // API endpoint to fetch the profile picture
+            let profilePictureUrl = `https://lbv.digital/profile_picture/${userId}`;
+
+            // Fetch the profile picture
+            fetch(profilePictureUrl, {
+                headers: { 'Authorization': `Bearer ${adminToken}` }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob(); // If image is found, response will be a blob
+                    } else {
+                        throw new Error('Profilbild nicht gefunden');
+                    }
+                })
+                .then(imageBlob => {
+                    // Convert the blob to a URL and set it as the src of the image element
+                    let imageUrl = URL.createObjectURL(imageBlob);
+                    document.getElementById('profilePicture').src = imageUrl;
+
+                    // Also set the src of the image preview in the modal
+                    document.getElementById('imagePreview').src = imageUrl;
+
+                    const imgContainer = document.querySelector('.img-container');
+                    imgContainer.style.display = 'block'; // Display the image container
+                    imagePreview.style.display = 'block'; // Display the image preview
+
+                    // Set height and width of the image preview to 400px
+                    imagePreview.style.height = '400px';
+                    imagePreview.style.width = '400px';
 
 
 
-<!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
+                })
+                .catch(error => {
+                    console.error('Error:', error.message);
+                });
+        }
+
+        // Call the function on page load or at a suitable time
+        fetchProfilePicture();
+    </script>
+
+
+
+    <!-- CHANGE PROFILE PICTURE -->
+
+    <!-- Profilbild -->
+    <style>
+        .img-container {
+            max-height: 400px;
+            /* Anpassen basierend auf der Modalgröße */
+            overflow: hidden;
+            /* Scrollen hinzufügen, wenn das Bild zu hoch ist */
+            max-width: 100%;
+            display: none;
+            /* Hide the container by default */
+        }
+    </style>
+
+    <div class="modal fade" id="profilePictureModal" tabindex="-1" role="dialog"
+        aria-labelledby="profilePictureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profilePictureModalLabel">Profilbild aktualisieren</h5>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center">
+                    <div class="img-container" style="display: none;">
+                        <img id="imagePreview" src="#" alt="Dein Profilbild" style="display: none;">
+                    </div>
+                    <input type="file" id="profilePictureInput" accept="image/jpeg, image/jpg, image/png" hidden>
+                    <button class="btn btn-primary mt-3"
+                        onclick="document.getElementById('profilePictureInput').click();">
+                        Bild auswählen
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" class="close" data-dismiss="modal" >Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="saveProfilePicture">Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cropper;
+        document.getElementById('profilePictureInput').addEventListener('change', function (event) {
+            const [file] = event.target.files;
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imagePreview = document.getElementById('imagePreview');
+                    const imgContainer = document.querySelector('.img-container');
+                    imagePreview.src = e.target.result;
+                    imgContainer.style.display = 'block'; // Display the image container
+                    imagePreview.style.display = 'block'; // Display the image preview
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(imagePreview, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        scalable: false,
+                        zoomable: false,
+                        minContainerHeight: 400, // Mindesthöhe für den Container festlegen
+                        minCanvasHeight: 400, // Mindesthöhe für die Leinwand festlegen
+                    });
+
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('saveProfilePicture').addEventListener('click', function () {
+            if (cropper) {
+                // Get cropped image data as a data URL
+                const croppedImageData = cropper.getCroppedCanvas().toDataURL();
+                // Convert data URL to blob
+                fetch(croppedImageData)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        // Create form data
+                        const formData = new FormData();
+                        formData.append('file', blob, 'profile_picture.png'); // Second parameter is the blob, third parameter is filename
+
+                        // Get user ID from JWT token
+                        const adminToken = localStorage.getItem('jwtToken');
+                        const decodedToken = jwt_decode(adminToken); // Use a suitable JWT decode library
+                        const userId = decodedToken.user_id; // Adjust this according to your token structure
+
+                        // Append user ID to form data
+                        formData.append('user_id', userId);
+
+                        // Make the POST request to the server
+                        fetch('https://lbv.digital/upload_profile_picture', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${adminToken}`
+                            },
+                            body: formData
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    showErrorToast(response.statusText);
+                                    showErrorToast('Fehler beim Hochladen des Profilbildes. (Maximale Dateigröße: 3 MB)');
+                                    throw new Error('Fehler beim Hochladen des Profilbildes');
+
+                                }
+                            })
+                            .then(data => {
+                                // close the modal
+                                $('#profilePictureModal').modal('hide');
+                                // Display success toast
+                                showSuccessToast(data.message);
+
+                                // Update the profile picture
+                                fetchProfilePicture();
+
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                showErrorToast('Fehler beim Hochladen des Profilbildes. (Maximale Dateigröße: 3 MB)');
+                            });
+                    });
+            }
+        });
+    </script>
+
+
+
+    <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
 
     <div id="toastContainer">
         <!-- Toasts will be added here -->
@@ -412,16 +605,20 @@
         // showErrorToast('This is an error message!');
     </script>
 
-<!-- TOAST END -->
+    <!-- TOAST END -->
 
 
 
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 
-
-
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+        </script>
+    <!-- Cropper.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
 </body>
 

@@ -105,41 +105,47 @@
     color: #28a745;
   }
 
-  footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+
+  .user-count-container {
+    width: 20%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
   }
-
-
+  
+  .icon-container {
+    background-color: white;
+    border-radius: 5px 0 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    height: 20px;
+  }
+  
+  .icon {
+    -webkit-text-stroke: 0.5px;
+    font-size: 1.3em;
+  }
+  
+  .progress-bar {
+    height: 20px;
+    border-radius: 0 5px 5px 0;
+    transition: width 0.5s ease-in-out;
+  }
+  
   nav {
     display: flex;
     align-items: center;
   }
 
-
-
   nav {
     display: flex;
     align-items: center;
   }
-
-  footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    position: fixed;
-    /* Positionierung auf fixed ändern */
-    width: 100%;
-    bottom: 0;
-    /* Fußzeile am unteren Bildschirmrand positionieren */
-  }
-
 
   /* Custom CSS for an extra-large modal */
   /* .modal-xl {

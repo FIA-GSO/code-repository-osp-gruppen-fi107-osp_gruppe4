@@ -71,39 +71,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     var termin = document.createElement("p");
                     termin.textContent = gruppe.termin;
+
                     var userCountContainer = document.createElement("div");
-                    userCountContainer.style.width = '20%'; // Assuming you want the container to be full width
-                    userCountContainer.style.backgroundColor = '#e0e0e0';
-                    userCountContainer.style.borderRadius = '5px';
-                    userCountContainer.style.overflow = 'hidden';
-                    userCountContainer.style.position = 'relative';
-                    userCountContainer.style.display = 'flex'; // Use flexbox to align icon and progress bar
-                    userCountContainer.style.alignItems = 'center'; // Align items vertically in the center
+                    userCountContainer.className = "user-count-container";
 
                     var iconContainer = document.createElement("div");
-                    iconContainer.style.backgroundColor = 'white'; // Set the background color to white
-                    iconContainer.style.borderRadius = '5px 0 0 5px'; // Rounded corners on the left side to match the userCountContainer
-                    iconContainer.style.display = 'flex';
-                    iconContainer.style.alignItems = 'center';
-                    iconContainer.style.justifyContent = 'center';
-                    iconContainer.style.padding = '0 4px'; // Padding to ensure the icon is not sticking to the edges
-                    iconContainer.style.height = '20px'; // Match the height of the progressBar
+                    iconContainer.className = "icon-container";
 
                     // Create the icon element and set its classes
                     var icon = document.createElement("i");
-                    icon.className = "bi bi-people";
-                    icon.style.webkitTextStroke = '0.5px'; // Add a 1px stroke to the icon
-                    icon.style.fontSize = '1.3em'; // Set the font size to 1.2em
+                    icon.className = "bi bi-people icon"; // Assuming you're using Bootstrap Icons
 
                     iconContainer.appendChild(icon); // Append the icon to the icon container
                     userCountContainer.appendChild(iconContainer); // Append the icon container to the user count container
 
                     var progressBar = document.createElement("div");
-                    progressBar.style.height = '20px'; // Set a fixed height for the progress bar
-                    progressBar.style.borderRadius = '0 5px 5px 0'; // Rounded corners on the right side
-                    progressBar.style.transition = 'width 0.5s ease-in-out'; // Smooth transition for loading
+                    progressBar.className = "progress-bar";
 
                     userCountContainer.appendChild(progressBar); // Append the progress bar to the container
+
 
 
                     $(userCountContainer).attr({

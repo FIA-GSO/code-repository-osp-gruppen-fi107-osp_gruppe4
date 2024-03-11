@@ -48,12 +48,13 @@
   .gruppen-info p {
     font-size: 16px;
     margin-bottom: 10px;
+    max-width: 65%;
   }
 
   .gruppen-info button {
-    /* position: relative; */
-    /* bottom: 20px; */
-    /* right: 20px; */
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 
 
     background-color: transparent;

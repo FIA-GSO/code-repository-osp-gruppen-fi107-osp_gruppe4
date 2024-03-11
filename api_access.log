@@ -1,4 +1,0 @@
-2024-03-07 21:45:50,922:INFO:{"user_id": "Anonymous", "time": "2024-03-07T21:45:50.922483", "route": "/", "method": "GET", "data": "N/A"}
-2024-03-07 21:45:51,236:INFO:{"user_id": "Anonymous", "time": "2024-03-07T21:45:51.236614", "route": "/login", "method": "GET", "data": "N/A"}
-2024-03-07 21:45:56,242:INFO:{"user_id": "Anonymous", "time": "2024-03-07T21:45:56.242221", "route": "/", "method": "GET", "data": "N/A"}
-2024-03-07 21:45:56,316:INFO:{"user_id": "Anonymous", "time": "2024-03-07T21:45:56.315115", "route": "/login", "method": "GET", "data": "N/A"}

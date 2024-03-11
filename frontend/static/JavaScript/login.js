@@ -67,7 +67,7 @@ document.querySelector('.form-signin').addEventListener('submit', function(event
             localStorage.setItem('isAdmin',data.isAdmin);
 
             // Weiterleitung zum Dashboard oder zur nächsten Seite
-            window.location.href = '/Views/Homepage.html';
+            window.location.href = '/';
         })
     })
     .catch(error => {

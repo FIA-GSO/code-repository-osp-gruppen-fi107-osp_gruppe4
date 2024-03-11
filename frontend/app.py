@@ -1,6 +1,9 @@
 from flask import Flask, render_template, send_from_directory
 import os
 
+# "Backend" for the frontend
+# This file is used to start the frontend server
+
 app = Flask(__name__, static_url_path='', static_folder='static', template_folder='Views')
 
 @app.route('/')

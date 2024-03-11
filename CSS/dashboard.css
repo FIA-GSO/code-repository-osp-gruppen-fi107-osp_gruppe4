@@ -1,170 +1,203 @@
   body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
 
-    main {
-      padding: 20px;
-    }
-    .gruppen-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
+  main {
+    padding: 20px;
+  }
 
-
-
-    .gruppen-info {
-      width: calc(50% - 20px);
-      margin-bottom: 20px;
-      padding: 20px;
-      background-color: #fff; /* White background for a clean look */
-      border-radius: 8px;
-      box-sizing: border-box;
-      position: relative;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    .gruppen-info:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow for lifted effect */
-      transform: translateY(-3px); /* Slight upward movement on hover */
-    }
-    
-    .gruppen-info h3 {
-      font-size: 20px;
-      margin-top: 0;
-      font-weight: bold;
-    }
-    .gruppen-info p {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    .gruppen-info button {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background-color: transparent; /* Change to transparent for the outline effect */
-      color: #333; /* Typically, the text color matches the border color */
-      border: 2px solid #333; /* Add a border with the desired color */
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-      min-width: 131px;
-    }
-    
-    .gruppen-info button:hover, .gruppen-info button:focus {
-      background-color: #333; /* Background color on hover/focus */
-      color: #fff; /* Text color on hover/focus */
-      border-color: #333; /* Optional: Adjust border color on hover/focus if needed */
-    }
-    
-    
-
-    .gruppen-info .button-verlassen i{
-      color: #dc3545;
-    }
-
-    .gruppen-info .button-aufloesen {
-      background-color: #dc3545;
-      border: #b02a37;
-      color: #fff;
-    }
-
-    .gruppen-info i {
-      -webkit-text-stroke: 0.6px;
-      
-    }
-
-    .gruppen-info .button-aufloesen:hover {
-      background-color: #b02a37;
-    }
-
-    .gruppen-info .button-beitreten i{
-      color: #28a745;
-    }
-
-    footer {
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 10px;
-      position: fixed;
-      width: 100%;
-      bottom: 0;
-    }
-
-
-    nav {
-      display: flex;
-      align-items: center;
-    }
+  .gruppen-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
 
 
 
-    nav {
-      display: flex;
-      align-items: center;
-    }
+  .gruppen-info {
+    width: calc(50% - 20px);
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+    /* White background for a clean look */
+    border-radius: 8px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
 
-    footer {
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      padding: 10px;
-      position: fixed; /* Positionierung auf fixed ändern */
-      width: 100%;
-      bottom: 0; /* Fußzeile am unteren Bildschirmrand positionieren */
-    }
+  .gruppen-info:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Enhanced shadow for lifted effect */
+    transform: translateY(-3px);
+    /* Slight upward movement on hover */
+  }
+
+  .gruppen-info h3 {
+    font-size: 20px;
+    margin-top: 0;
+    font-weight: bold;
+  }
+
+  .gruppen-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .gruppen-info button {
+    /* position: relative; */
+    /* bottom: 20px; */
+    /* right: 20px; */
 
 
-    /* Custom CSS for an extra-large modal */
-/* .modal-xl {
+    background-color: transparent;
+    /* Change to transparent for the outline effect */
+    color: #333;
+    /* Typically, the text color matches the border color */
+    border: 1px solid #333;
+    /* Add a border with the desired color */
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    min-width: 131px;
+  }
+
+  .gruppen-info button:hover,
+  .gruppen-info button:focus {
+    background-color: #333;
+    /* Background color on hover/focus */
+    color: #fff;
+    /* Text color on hover/focus */
+    border-color: #333;
+    /* Optional: Adjust border color on hover/focus if needed */
+  }
+
+
+
+  .gruppen-info .button-verlassen i {
+    color: #dc3545;
+  }
+
+  .gruppen-info .button-aufloesen {
+    background-color: #dc3545;
+    border: #b02a37;
+    color: #fff;
+  }
+
+  .gruppen-info i {
+    -webkit-text-stroke: 0.6px;
+
+  }
+
+  .gruppen-info .button-aufloesen:hover {
+    background-color: #b02a37;
+  }
+
+  .gruppen-info .button-beitreten i {
+    color: #28a745;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+
+
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+
+
+  nav {
+    display: flex;
+    align-items: center;
+  }
+
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    /* Positionierung auf fixed ändern */
+    width: 100%;
+    bottom: 0;
+    /* Fußzeile am unteren Bildschirmrand positionieren */
+  }
+
+
+  /* Custom CSS for an extra-large modal */
+  /* .modal-xl {
   max-width: 70%; /* Adjust this value according to your needs */
 
-/* Custom styles for the modal to make it look like a card */
-.modal-content {
-  border: none; /* Removes the default modal border */
-  border-radius: 0.5rem; /* Adds rounded corners similar to a card */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow like a card */
-}
+  /* Custom styles for the modal to make it look like a card */
+  .modal-content {
+    border: none;
+    /* Removes the default modal border */
+    border-radius: 0.5rem;
+    /* Adds rounded corners similar to a card */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Adds a subtle shadow like a card */
+  }
 
-.modal-header, .modal-footer {
-  border: none; /* Removes the header and footer borders */
-  padding: 1.25rem; /* Adjusts the padding to match card style */
-}
+  .modal-header,
+  .modal-footer {
+    border: none;
+    /* Removes the header and footer borders */
+    padding: 1.25rem;
+    /* Adjusts the padding to match card style */
+  }
 
-.modal-body {
-  padding: 1.25rem; /* Adjusts the body padding to be more card-like */
-}
+  .modal-body {
+    padding: 1.25rem;
+    /* Adjusts the body padding to be more card-like */
+  }
 
-.modal-backdrop.show {
-  opacity: 30%; 
-}
+  .modal-backdrop.show {
+    opacity: 30%;
+  }
 
 
-.modal-body h5 {
-  font-weight: bold; /* Makes headings bold */
-}
+  .modal-body h5 {
+    font-weight: bold;
+    /* Makes headings bold */
+  }
 
-.modal-body p {
-  background-color: #f8f9fa; /* A light grey background */
-  padding: 10px;
-  border-radius: 5px; /* Rounded corners */
-  border: 1px solid #e9ecef; /* A light border */
-}
+  .modal-body p {
+    background-color: #f8f9fa;
+    /* A light grey background */
+    padding: 10px;
+    border-radius: 5px;
+    /* Rounded corners */
+    border: 1px solid #e9ecef;
+    /* A light border */
+  }
 
-/* Custom icon styling */
-.modal-body .bi {
-  margin-right: 5px; /* Space between icon and text */
-  color: #000000; /* Bootstrap primary color for icons */
-}
-.no-padding {
-  padding-left: 0 !important; /* Verwendet !important, um sicherzustellen, dass dieser Stil Vorrang hat */
-  padding-right: 0 !important;
-}
+  /* Custom icon styling */
+  .modal-body .bi {
+    margin-right: 5px;
+    /* Space between icon and text */
+    color: #000000;
+    /* Bootstrap primary color for icons */
+  }
+
+  .no-padding {
+    padding-left: 0 !important;
+    /* Verwendet !important, um sicherzustellen, dass dieser Stil Vorrang hat */
+    padding-right: 0 !important;
+  }

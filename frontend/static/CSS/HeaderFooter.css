@@ -57,15 +57,20 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
   
-  .impressum{
-    color: #000000;
-    border: none;
-    padding: 10px 20px;
+  .impressum-link {
+    color: #ffffff; /* Change text color to white */
+    text-decoration: none; /* Remove underline from links */
     font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
     transition: background-color 0.3s ease;
+    cursor: pointer;
   }
+  
+  /* Optional: Add a hover effect */
+  .impressum-link:hover {
+    color: #000000; /* Change text color on hover if needed */
+  }
+  
+  
 
   .create-group-btn {
     text-decoration: none;

@@ -4,7 +4,7 @@ const BASE_URL = 'https://lbv.digital';
 document.addEventListener('DOMContentLoaded', () => {
     const jwtToken = localStorage.getItem('jwtToken');
     if (!jwtToken) {
-        window.location.href = '/Views/login.html';
+        window.location.href = '/login';
         throw new Error('JwtToken nicht gefunden im Local Storage');
     }
     const userId = localStorage.getItem('userId');
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let currentPath = window.location.pathname;
             const container = document.getElementById('gruppen-container');
             for (const gruppe of alleGruppen) {
-                if ((currentPath == '/Views/myGroups.html' && (groupsOfUser.includes(gruppe.groupID) || userId == gruppe.ownerID)) ||
-                    currentPath == '/Views/Homepage.html') {
+                if ((currentPath == '/my-groups' && (groupsOfUser.includes(gruppe.groupID) || userId == gruppe.ownerID)) ||
+                    currentPath == '/') {
 
                     var gruppenInfo = document.createElement("div");
                     gruppenInfo.classList.add("gruppen-info");

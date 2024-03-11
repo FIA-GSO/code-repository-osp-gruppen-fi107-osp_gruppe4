@@ -80,6 +80,13 @@
             </div>
 
 
+            <div id="terminContainer">
+              <h5><i class="bi bi-calendar"></i> Termine</h5>
+              <ul id="terminList" style="padding-left: 0;"></ul>
+            </div>
+
+
+
 
           </div>
 
@@ -98,108 +105,108 @@
   <footer>
     <a href="/impressum" class="impressum-link">Impressum</a>
   </footer>
-  
-
-      <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
-
-      <div id="toastContainer">
-        <!-- Toasts will be added here -->
-      </div>
 
 
-      <style>
-        #toastContainer {
-          position: fixed;
-          bottom: 0;
-          right: 0;
-          margin-right: 20px;
-          margin-bottom: 20px;
-          z-index: 2000;
-        }
+  <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
 
-        .toast {
-          border-radius: 5px;
-          margin-top: 10px;
-          opacity: 1;
-        }
-
-        .toast-success {
-          background-color: #28a745;
-          color: white;
-        }
-
-        .toast-error {
-          background-color: #dc3545;
-          color: white;
-        }
-
-        .toast-info {
-          background-color: #ff9c07;
-          color: white;
-        }
-      </style>
+  <div id="toastContainer">
+    <!-- Toasts will be added here -->
+  </div>
 
 
-      <script>
-        function createToast(message, type) {
-          var toast = document.createElement('div');
-          var toastClasses = 'toast align-items-center text-white ';
+  <style>
+    #toastContainer {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      z-index: 2000;
+    }
 
-          switch (type) {
-            case 'success':
-              toastClasses += 'bg-success';
-              break;
-            case 'error':
-              toastClasses += 'bg-danger';
-              break;
-            case 'info':
-              toastClasses += 'bg-warning'; // Info class addition
-              break;
-            default:
-              toastClasses += 'bg-secondary'; // Fallback class
-          }
+    .toast {
+      border-radius: 5px;
+      margin-top: 10px;
+      opacity: 1;
+    }
 
-          toast.className = toastClasses;
-          toast.role = 'alert';
-          toast.ariaLive = 'assertive';
-          toast.ariaAtomic = 'true';
-          toast.innerHTML = `
+    .toast-success {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .toast-error {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .toast-info {
+      background-color: #ff9c07;
+      color: white;
+    }
+  </style>
+
+
+  <script>
+    function createToast(message, type) {
+      var toast = document.createElement('div');
+      var toastClasses = 'toast align-items-center text-white ';
+
+      switch (type) {
+        case 'success':
+          toastClasses += 'bg-success';
+          break;
+        case 'error':
+          toastClasses += 'bg-danger';
+          break;
+        case 'info':
+          toastClasses += 'bg-warning'; // Info class addition
+          break;
+        default:
+          toastClasses += 'bg-secondary'; // Fallback class
+      }
+
+      toast.className = toastClasses;
+      toast.role = 'alert';
+      toast.ariaLive = 'assertive';
+      toast.ariaAtomic = 'true';
+      toast.innerHTML = `
       <div class="d-flex">
           <div class="toast-body">${message}</div>
       </div>
   `;
 
-          toast.addEventListener('hidden.bs.toast', function () {
-            toast.remove();
-          });
+      toast.addEventListener('hidden.bs.toast', function () {
+        toast.remove();
+      });
 
-          document.getElementById('toastContainer').appendChild(toast);
-          return toast;
-        }
+      document.getElementById('toastContainer').appendChild(toast);
+      return toast;
+    }
 
-        function showSuccessToast(message) {
-          var toastEl = createToast(message, 'success');
-          new bootstrap.Toast(toastEl, { delay: 5000 }).show();
-        }
+    function showSuccessToast(message) {
+      var toastEl = createToast(message, 'success');
+      new bootstrap.Toast(toastEl, { delay: 5000 }).show();
+    }
 
-        function showErrorToast(message) {
-          var toastEl = createToast(message, 'error');
-          new bootstrap.Toast(toastEl, { delay: 10000 }).show();
-        }
+    function showErrorToast(message) {
+      var toastEl = createToast(message, 'error');
+      new bootstrap.Toast(toastEl, { delay: 10000 }).show();
+    }
 
-        function showInfoToast(message) {
-          var toastEl = createToast(message, 'info');
-          new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
-        }
+    function showInfoToast(message) {
+      var toastEl = createToast(message, 'info');
+      new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
+    }
 
-        // Example usage
-        // showSuccessToast('This is a success message!');
-        // showErrorToast('This is an error message!');
-        // showInfoToast('This is an informational message!');
-      </script>
+    // Example usage
+    // showSuccessToast('This is a success message!');
+    // showErrorToast('This is an error message!');
+    // showInfoToast('This is an informational message!');
+  </script>
 
 
-      <!-- TOAST END -->
+  <!-- TOAST END -->
 
 
 

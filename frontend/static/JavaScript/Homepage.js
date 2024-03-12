@@ -69,7 +69,7 @@ const createElementWithText = (tag, text) => {
 const createUserCountContainer = async (gruppe, userId) => {
     const userCountContainer = document.createElement("div");
     userCountContainer.className = "user-count-container";
-
+    
     const iconContainer = document.createElement("div");
     iconContainer.className = "icon-container";
 
@@ -250,45 +250,7 @@ async function showGroupInfoModal(event) {
         membersList.appendChild(memberItem);
     });
 
-    // Fetch group dates (Termine) and update the modal
-    const dates = await fetchGroupDates(groupId);
-    const terminList = document.getElementById('terminList');
-    terminList.innerHTML = ''; // Clear previous entries
-    console.log('dates HALLLO????', dates);
-    dates.forEach(date => {
-        const dateItem = document.createElement('li');
-        dateItem.style.listStyleType = 'none';
-        dateItem.style.padding = '10px';
-        dateItem.style.borderBottom = '1px solid #eee';
-        dateItem.style.display = 'flex';
-        dateItem.style.alignItems = 'center';
-        dateItem.style.paddingLeft = '0px';
 
-        const dateInfo = document.createElement('span');
-        dateInfo.textContent = `Termin am ${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
-        dateInfo.style.fontWeight = 'bold';
-
-        const maxUsers = document.createElement('span');
-        maxUsers.textContent = ` Maximale Teilnehmer: ${date.maxUsers}`;
-        maxUsers.style.fontSize = '0.8em';
-        maxUsers.style.marginLeft = '15px';
-        maxUsers.style.color = '#666';
-
-        console.log('date', date);
-
-        // Fügt die erstellten Elemente zum Listenelement hinzu
-        dateItem.appendChild(dateInfo);
-        dateItem.appendChild(maxUsers);
-
-        // Fügt das Listenelement zur Liste hinzu
-        terminList.appendChild(dateItem);
-        console.log('terminList', terminList);
-
-        // Only display the last 5 dates
-        if (terminList.children.length > 5) {
-            terminList.children[0].remove();
-        }
-    });
 
 
     $(document).ready(function () {
@@ -298,37 +260,6 @@ async function showGroupInfoModal(event) {
     // Modal anzeigen
     $('#groupInfoModal').modal('show');
 }
-
-async function fetchGroupDates(groupId) {
-    try {
-        const jwtToken = localStorage.getItem('jwtToken');
-        const response = await fetch(`${BASE_URL}/dates`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${jwtToken}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok.');
-        }
-
-        const dates = await response.json();
-        console.log('Fetched group dates:', dates);
-
-        return dates
-
-
-    } catch (error) {
-        console.error('Error fetching group dates:', error);
-        return [];
-    }
-}
-
-
-
-
-
 
 function createBadge(text, className) {
     const badge = document.createElement('span');

@@ -97,142 +97,106 @@
 
 
 
-  <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
+      <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
 
-  <div id="toastContainer">
-    <!-- Toasts will be added here -->
-  </div>
-
-  <!-- Group Information Modal -->
-  <div class="modal fade" id="groupInfoModal" tabindex="-1" role="dialog" aria-labelledby="groupInfoModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg for a large modal -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="groupInfoModalLabel">Group Information</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- Group Description -->
-          <div class="mb-3">
-            <h5 class="mb-2"><i class="bi bi-card-text" aria-hidden="true"></i> Beschreibung</h5>
-            <p id="groupDescription" class="pl-3"></p> <!-- pl-3 for padding-left -->
-          </div>
-
-          <!-- Place this inside the modal body where appropriate -->
-          <div id="groupMembersContainer">
-            <h5><i class="bi bi-people"></i> Mitglieder</h5>
-            <ul id="groupMembersList" style="padding-left: 0;"></ul>
-          </div>
-
-
-
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
-        </div>
+      <div id="toastContainer">
+        <!-- Toasts will be added here -->
       </div>
-    </div>
-  </div>
 
 
+      <style>
+        #toastContainer {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          margin-right: 20px;
+          margin-bottom: 20px;
+          z-index: 2000;
+        }
 
-  <style>
-    #toastContainer {
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      margin-right: 20px;
-      margin-bottom: 20px;
-      z-index: 2000;
-    }
+        .toast {
+          border-radius: 5px;
+          margin-top: 10px;
+          opacity: 1;
+        }
 
-    .toast {
-      border-radius: 5px;
-      margin-top: 10px;
-      opacity: 1;
-    }
+        .toast-success {
+          background-color: #28a745;
+          color: white;
+        }
 
-    .toast-success {
-      background-color: #28a745;
-      color: white;
-    }
+        .toast-error {
+          background-color: #dc3545;
+          color: white;
+        }
 
-    .toast-error {
-      background-color: #dc3545;
-      color: white;
-    }
-
-    .toast-info {
-      background-color: #ff9c07;
-      color: white;
-    }
-  </style>
+        .toast-info {
+          background-color: #ff9c07;
+          color: white;
+        }
+      </style>
 
 
-  <script>
-    function createToast(message, type) {
-      var toast = document.createElement('div');
-      var toastClasses = 'toast align-items-center text-white ';
+      <script>
+        function createToast(message, type) {
+          var toast = document.createElement('div');
+          var toastClasses = 'toast align-items-center text-white ';
 
-      switch (type) {
-        case 'success':
-          toastClasses += 'bg-success';
-          break;
-        case 'error':
-          toastClasses += 'bg-danger';
-          break;
-        case 'info':
-          toastClasses += 'bg-warning'; // Info class addition
-          break;
-        default:
-          toastClasses += 'bg-secondary'; // Fallback class
-      }
+          switch (type) {
+            case 'success':
+              toastClasses += 'bg-success';
+              break;
+            case 'error':
+              toastClasses += 'bg-danger';
+              break;
+            case 'info':
+              toastClasses += 'bg-warning'; // Info class addition
+              break;
+            default:
+              toastClasses += 'bg-secondary'; // Fallback class
+          }
 
-      toast.className = toastClasses;
-      toast.role = 'alert';
-      toast.ariaLive = 'assertive';
-      toast.ariaAtomic = 'true';
-      toast.innerHTML = `
+          toast.className = toastClasses;
+          toast.role = 'alert';
+          toast.ariaLive = 'assertive';
+          toast.ariaAtomic = 'true';
+          toast.innerHTML = `
       <div class="d-flex">
           <div class="toast-body">${message}</div>
       </div>
   `;
 
-      toast.addEventListener('hidden.bs.toast', function () {
-        toast.remove();
-      });
+          toast.addEventListener('hidden.bs.toast', function () {
+            toast.remove();
+          });
 
-      document.getElementById('toastContainer').appendChild(toast);
-      return toast;
-    }
+          document.getElementById('toastContainer').appendChild(toast);
+          return toast;
+        }
 
-    function showSuccessToast(message) {
-      var toastEl = createToast(message, 'success');
-      new bootstrap.Toast(toastEl, { delay: 5000 }).show();
-    }
+        function showSuccessToast(message) {
+          var toastEl = createToast(message, 'success');
+          new bootstrap.Toast(toastEl, { delay: 5000 }).show();
+        }
 
-    function showErrorToast(message) {
-      var toastEl = createToast(message, 'error');
-      new bootstrap.Toast(toastEl, { delay: 10000 }).show();
-    }
+        function showErrorToast(message) {
+          var toastEl = createToast(message, 'error');
+          new bootstrap.Toast(toastEl, { delay: 10000 }).show();
+        }
 
-    function showInfoToast(message) {
-      var toastEl = createToast(message, 'info');
-      new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
-    }
+        function showInfoToast(message) {
+          var toastEl = createToast(message, 'info');
+          new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
+        }
 
-    // Example usage
-    // showSuccessToast('This is a success message!');
-    // showErrorToast('This is an error message!');
-    // showInfoToast('This is an informational message!');
-  </script>
+        // Example usage
+        // showSuccessToast('This is a success message!');
+        // showErrorToast('This is an error message!');
+        // showInfoToast('This is an informational message!');
+      </script>
 
 
-  <!-- TOAST END -->
+      <!-- TOAST END -->
 
   <!-- Bootstrap JS -->
 

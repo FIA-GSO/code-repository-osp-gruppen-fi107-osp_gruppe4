@@ -13,5 +13,6 @@ ausloggenbtn.addEventListener('click', () => {
     localStorage.removeItem('firstName');
     localStorage.removeItem('userId');
     localStorage.removeItem('isAdmin');
-    window.location.href = '/Views/login.html';
+    localStorage.removeItem('jwtToken');
+    window.location.href = '/login';
 })

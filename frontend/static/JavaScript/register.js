@@ -7,22 +7,38 @@ function checkEmail() {
     var emailErrorElement = document.getElementById("emailError");
     if (!result) {
         emailErrorElement.innerHTML = "Bitte geben Sie eine gültige E-Mail-Adresse mit @gso.schule.koeln ein.";
-            return false;
+        return false;
     } else {
         emailErrorElement.innerHTML = "";
         email = tempemail;
         return true;
     }
 }
-console.log(email)
+
+var password;
+function checkPassword() {
+    password = document.getElementById('inputPassword').value;
+    //var pattern = password
+    var validPassword = document.getElementById('inputPassword2').value;
+    //var result = pattern.test(validPassword)
+    var passwordErrorElement = document.getElementById("passwordError");
+    if (password != validPassword) {
+        passwordErrorElement.innerHTML = "Passwörter stimmen nicht miteinander überein.";
+        return false;
+    } else {
+        passwordErrorElement.innerHTML = "";
+        password = validPassword;
+        return true;
+    }
+}
+
+
 document.querySelector('.form-signin').addEventListener('submit', function(event) {
     event.preventDefault();
 
     checkEmail()
-    
-    
+    checkPassword()
     var firstname = document.getElementById('inputName').value;
-    var password = document.getElementById('inputPassword').value;
     var isAdmin;
 
     console.log(email)

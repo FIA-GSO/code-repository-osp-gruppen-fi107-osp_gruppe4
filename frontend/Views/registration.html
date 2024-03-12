@@ -44,9 +44,10 @@
   <input type="email" id="inputEmail" class="form-control" oninput="checkEmail()" placeholder="E-Mail" required autofocus>
   <span id="emailError" style="color: red;"></span>
   <label for="inputPassword" class="sr-only">Passwort</label>
-  <input type="password" id="inputPassword" class="form-control" placeholder="Passwort" required>
+  <input type="password" id="inputPassword" class="form-control" oninput="checkPassword()" placeholder="Passwort" required>
   <label for="inputPassword2" class="sr-only">Passwort bestätigen</label>
-  <input type="password" id="inputPassword2" class="form-control" placeholder="Passwort bestätigen" required>
+  <input type="password" id="inputPassword2" class="form-control" oninput="checkPassword()" placeholder="Passwort bestätigen" required>
+  <span id="passwordError" style="color: red;"></span>
   </div>
   <button class="btn btn-lg btn-primary btn-block" type="submit" id="registerbtn">Registrieren</button>
   <p style="margin-top: 10px;"> <a href="/login">Zurück zum Login</a></p>

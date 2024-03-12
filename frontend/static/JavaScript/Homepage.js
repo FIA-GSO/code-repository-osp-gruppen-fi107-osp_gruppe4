@@ -254,7 +254,6 @@ async function showGroupInfoModal(event) {
     const dates = await fetchGroupDates(groupId);
     const terminList = document.getElementById('terminList');
     terminList.innerHTML = ''; // Clear previous entries
-    console.log('dates HALLLO????', dates);
     dates.forEach(date => {
         const dateItem = document.createElement('li');
         dateItem.style.listStyleType = 'none';
@@ -265,7 +264,7 @@ async function showGroupInfoModal(event) {
         dateItem.style.paddingLeft = '0px';
 
         const dateInfo = document.createElement('span');
-        dateInfo.textContent = `Termin am ${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
+        dateInfo.textContent = `${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
         dateInfo.style.fontWeight = 'bold';
 
         const maxUsers = document.createElement('span');
@@ -302,7 +301,8 @@ async function showGroupInfoModal(event) {
 async function fetchGroupDates(groupId) {
     try {
         const jwtToken = localStorage.getItem('jwtToken');
-        const response = await fetch(`${BASE_URL}/dates`, {
+        // Adjusted URL to include groupId in the request path
+        const response = await fetch(`${BASE_URL}/groups/${groupId}/dates`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
@@ -316,7 +316,8 @@ async function fetchGroupDates(groupId) {
         const dates = await response.json();
         console.log('Fetched group dates:', dates);
 
-        return dates
+        // This now correctly returns only the dates for the specific group
+        return dates;
 
 
     } catch (error) {
@@ -324,6 +325,7 @@ async function fetchGroupDates(groupId) {
         return [];
     }
 }
+
 
 
 

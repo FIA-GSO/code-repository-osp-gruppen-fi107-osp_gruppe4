@@ -162,6 +162,11 @@
     /* Adds a subtle shadow like a card */
   }
 
+  .modal-header h5 {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
   .modal-header,
   .modal-footer {
     border: none;

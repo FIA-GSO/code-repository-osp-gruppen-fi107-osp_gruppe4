@@ -31,26 +31,30 @@
     </style>
     
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="/CSS/login.css">
+    <link rel="stylesheet" href="/CSS/register.css">
   </head>
   <body class="text-center">
     
 <form class="form-signin">
   <img class="mb-4" src="{{ url_for('static', filename='media/favicon.svg') }}" alt="LBV Logo" width="100" height="100">
   <h1 class="h3 mb-3 font-weight-normal">LBV-Weboberfläche</h1>
+  <label for="inputName" class="sr-only">Vorname</label>
+  <input type="text" id="inputName" class="form-control" placeholder="Vorname" required>
   <label for="inputEmail" class="sr-only">E-Mail</label>
   <input type="email" id="inputEmail" class="form-control" placeholder="E-Mail" required autofocus>
   <label for="inputPassword" class="sr-only">Passwort</label>
   <input type="password" id="inputPassword" class="form-control" placeholder="Passwort" required>
+  <label for="inputPassword2" class="sr-only">Passwort bestätigen</label>
+  <input type="password" id="inputPassword2" class="form-control" placeholder="Passwort bestätigen" required>
   </div>
-  <button class="btn btn-lg btn-primary btn-block" type="submit" href="/">Anmelden</button>
-  <p style="margin-top: 10px;">Oder <a href="/registration">Registrieren</a>.</p>
+  <button class="btn btn-lg btn-primary btn-block" type="submit" id="registerbtn">Registrieren</button>
+  <p style="margin-top: 10px;"> <a href="/login">Zurück zum Login</a></p>
 </form>
 
 
 
-<script src="/JavaScript/login.js">
+<!--<script src="/JavaScript/register.js"></script>-->
+<script src="{{ url_for('static', filename='JavaScript/register.js') }}></script>
 
-</script>
   </body>
 </html>

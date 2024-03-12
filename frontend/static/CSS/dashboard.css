@@ -225,3 +225,19 @@
     pointer-events: none;
     cursor: not-allowed;
   }
+
+
+
+
+  
+  .progress-bar {
+    width: 0;
+    transition: width 2s ease-out, background-color 0.5s ease; /* Smooth transition for width and background color */
+}
+
+/* Remove the @keyframes rule for loadProgress */
+
+/* General enhancements */
+.gruppen-info, .user-count-container, .icon-container {
+  transition: all 0.3s ease; /* Smooth transition for all hover effects */
+}

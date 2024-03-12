@@ -2,6 +2,20 @@
 const BASE_URL = "https://lbv.digital";
 const container = document.getElementById('gruppen-container');
 
+
+// Depending on if were on /my-groups or /, we need to make the navbar link bold
+const currentPath = window.location.pathname;
+if (currentPath === '/my-groups') {
+    document.getElementById('myGroupsLink').classList.add('active');
+    // Make myGroupsLink not clickable
+    document.getElementById('myGroupsLink').classList.add('disabled');
+} if (currentPath === '/') {
+    document.getElementById('allGroupsLink').classList.add('active');
+    // Make allGroupsLink not clickable
+    document.getElementById('allGroupsLink').classList.add('disabled');
+}
+
+
 // Helper functions
 const redirectToLoginIfUnauthorized = () => {
     const jwtToken = localStorage.getItem('jwtToken');

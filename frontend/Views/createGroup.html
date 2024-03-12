@@ -21,8 +21,9 @@
       <img src="{{ url_for('static', filename='media/favicon.svg') }}" alt="LBV Logo">
     </div>
     <nav>
-      <a href="/">Alle Gruppen</a>
-      <a href="/my-groups">Meine Gruppen</a>
+      <a href="/create-group" class="btn btn-dark create-group-btn"><i class="bi bi-plus-lg "></i> Neue Gruppe</a>
+      <a id="allGroupsLink" href="/">Alle Gruppen</a>
+      <a id="myGroupsLink" href="/my-groups">Meine Gruppen</a>
 
       <!-- Dropdown for profile picture and other options -->
       <div class="dropdown">

@@ -3,10 +3,14 @@
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
-  }
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Mindesthöhe des Körperbereichs auf 100% der Bildschirmhöhe setzen */
+  } 
 
   main {
     padding: 20px;
+    flex: 1;
   }
 
   .gruppen-container {
@@ -88,9 +92,16 @@
   }
 
   .gruppen-info .button-aufloesen {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+
+  .gruppen-info .button-aufloesen:hover {
     background-color: #dc3545;
-    border: #b02a37;
-    color: #fff;
+  }
+
+  .gruppen-info .button-aufloesen i {
+    color: #dc3545;
   }
 
   .gruppen-info i {
@@ -232,12 +243,16 @@
 
   .progress-bar {
     width: 0;
-    transition: width 2s ease-out, background-color 0.5s ease; /* Smooth transition for width and background color */
-}
+    transition: width 2s ease-out, background-color 0.5s ease;
+    /* Smooth transition for width and background color */
+  }
 
-/* Remove the @keyframes rule for loadProgress */
+  /* Remove the @keyframes rule for loadProgress */
 
-/* General enhancements */
-.gruppen-info, .user-count-container, .icon-container {
-  transition: all 0.3s ease; /* Smooth transition for all hover effects */
-}
+  /* General enhancements */
+  .gruppen-info,
+  .user-count-container,
+  .icon-container {
+    transition: all 0.3s ease;
+    /* Smooth transition for all hover effects */
+  }

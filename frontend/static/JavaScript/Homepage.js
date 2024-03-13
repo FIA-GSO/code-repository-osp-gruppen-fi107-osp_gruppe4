@@ -66,7 +66,8 @@ const createGroupElement = async (gruppe, groupsOfUser, userId) => {
     const userCountContainer = await createUserCountContainer(gruppe, userId);
     gruppenInfo.appendChild(userCountContainer); // This now waits for the promise to resolve
     gruppenInfo.appendChild(createElementWithText('p', gruppe.termin));
-    const actionButton = await createActionButton(gruppe, groupsOfUser, userId); // Make sure createActionButton is async if it needs to be
+
+    const actionButton = createActionButton(gruppe, groupsOfUser, userId, userCountContainer);
     gruppenInfo.appendChild(actionButton);
 
     gruppenInfo.addEventListener('click', showGroupInfoModal);
@@ -111,17 +112,22 @@ const createUserCountContainer = async (gruppe, userId) => {
         if (response.ok) {
             const data = await response.json();
             const percentage = (data.length / gruppe.maxUsers) * 100;
+
+            // Save as a data attribute of gruppenInfo
+            userCountContainer.dataset.userCount = data.length;
+            userCountContainer.dataset.maxUsers = gruppe.maxUsers;
+
             progressBar.style.width = '0%'; // Reset before animation
             setTimeout(() => { // Start animation after reset
                 progressBar.style.width = `${percentage}%`;
                 progressBar.style.backgroundColor = percentage < 50 ? '#28a745' : percentage < 75 ? '#ffa500' : '#f44336';
             }, 10); // Minimal delay for CSS transition to take effect
-        
+
             $(userCountContainer).attr('title', `${data.length}/${gruppe.maxUsers} Mitglieder`).tooltip('_fixTitle');
         } else {
             throw new Error('Nutzer der Gruppe konnten nicht gelesen werden.');
         }
-        
+
     } catch (error) {
         console.error(error);
     }
@@ -131,29 +137,40 @@ const createUserCountContainer = async (gruppe, userId) => {
     return userCountContainer;
 };
 
-
-const createActionButton = (gruppe, groupsOfUser, userId) => {
-    // Implementation of action button creation
+const createActionButton = (gruppe, groupsOfUser, userId, userCountContainer) => {
     const actionButton = document.createElement("button");
-    // Further implementation here...
+    // Retrieve user count and max users from the userCountContainer data attributes
+    const userCount = parseInt(userCountContainer.dataset.userCount);
+    const maxUsers = parseInt(userCountContainer.dataset.maxUsers);
+    const isFull = userCount >= maxUsers;
+
     if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
         actionButton.innerHTML = '<i class="bi bi-box-arrow-right"></i> Verlassen';
         actionButton.classList.add("button-verlassen");
-        actionButton.addEventListener('click', () => {
-            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
+        actionButton.addEventListener('click', (event) => {
+            event.stopPropagation();
             leaveGroup(gruppe.groupID);
         });
-    } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
+    } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID && !isFull) {
         actionButton.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Beitreten';
         actionButton.classList.add("button-beitreten");
-        actionButton.addEventListener('click', () => {
-            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
-
+        actionButton.addEventListener('click', (event) => {
+            event.stopPropagation();
             joinGroup(gruppe.groupID);
         });
+    } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID && isFull) {
+        actionButton.disabled = true;
+        actionButton.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Beitreten';
+        actionButton.classList.add("button-beitreten", "disabled");
+        // Hide the button if the group is full 
+        actionButton.style.display = 'none';
     } else if (userId == gruppe.ownerID) {
         actionButton.innerHTML = '<i class="bi bi-x-lg"></i> Auflösen';
         actionButton.classList.add("button-aufloesen");
+        actionButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            deleteGroup(gruppe.groupID);
+        });
     }
     return actionButton;
 };
@@ -262,11 +279,70 @@ async function showGroupInfoModal(event) {
         memberItem.appendChild(placeholder);
         memberItem.appendChild(memberJoinedDate);
 
+        // Get the user ID from the local storage
+        const userId = localStorage.getItem('userId');
+
+        // Only the group owner sees the remove option and cannot remove themselves
+        if (String(userId) === String(ownerId) && String(member.userID) !== String(ownerId)) {
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'bi bi-x-circle';
+            removeIcon.style.color = 'red';
+            removeIcon.style.marginLeft = '10px';
+            removeIcon.style.cursor = 'pointer';
+
+            removeIcon.addEventListener('click', function () {
+                const isConfirmed = confirm("Sind Sie sicher, dass Sie " + member.name + " aus der Gruppe entfernen möchten?");
+                if (!isConfirmed) {
+                    // User clicked 'Cancel', abort the function
+                    return;
+                }
+
+                // Assuming the structure is: li > (other elements) > button (this)
+                const listItem = this.closest('li');
+
+                // Fetch API to call the endpoint for deleting a user from a group
+                const jwtToken = localStorage.getItem('jwtToken'); // Assuming you store your JWT in localStorage
+                fetch(`${BASE_URL}/users_in_groups/${member.userID}/${groupId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`, // Send the JWT in the Authorization header
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // The user was successfully removed from the group
+                            showSuccessToast('Mitglied erfolgreich aus der Gruppe entfernt');
+                            // Remove the list item from the DOM
+                            listItem.remove();
+                        } else {
+                            // Handle non-OK responses
+                            response.text().then(text => {
+                                console.error('Error removing member from group:', text);
+                                showErrorToast('Fehler beim Entfernen des Mitglieds aus der Gruppe');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        // Handle network errors
+                        console.error('Network error when trying to remove member:', error);
+                        showErrorToast('Netzwerkfehler beim Versuch, ein Mitglied zu entfernen');
+                    });
+            });
+
+            memberItem.appendChild(removeIcon);
+        }
+
         memberItem.classList.add('no-padding');
 
         // Fügt das Listenelement zur Liste hinzu
         membersList.appendChild(memberItem);
+
     });
+
+    // Get the user ID from the local storage
+    const userId = localStorage.getItem('userId');
+
+    const isOwner = String(userId) === String(ownerId);
 
     // Fetch group dates (Termine) and update the modal
     const dates = await fetchGroupDates(groupId);
@@ -280,6 +356,7 @@ async function showGroupInfoModal(event) {
         dateItem.style.display = 'flex';
         dateItem.style.alignItems = 'center';
         dateItem.style.paddingLeft = '0px';
+        dateItem.style.paddingRight = '0px';
 
         const dateInfo = document.createElement('span');
         dateInfo.textContent = `${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
@@ -301,10 +378,55 @@ async function showGroupInfoModal(event) {
             dateItem.appendChild(maxUsers);
         }
 
+        if (isOwner) {
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'bi bi-x-circle';
+            removeIcon.style.color = 'red';
+            removeIcon.style.marginLeft = '10px';
+            removeIcon.style.cursor = 'pointer';
+
+            removeIcon.addEventListener('click', function () {
+                const isConfirmed = confirm("Sind Sie sicher, dass Sie den Termin am " + new Date(date.date).toLocaleDateString() + " entfernen möchten?");
+                if (!isConfirmed) {
+                    // User clicked 'Cancel', abort the function
+                    return;
+                }
+
+                fetch(`${BASE_URL}/dates/${date.id}`, { // Ensure date.dateId is the correct property name for your date's unique ID
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, // Correctly setting the Authorization header
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            showSuccessToast('Termin erfolgreich entfernt');
+                            dateItem.remove(); // Remove the date from the list
+                        } else {
+                            response.text().then(text => {
+                                console.error('Fehler beim Entfernen des Termins:', text);
+                                showErrorToast('Fehler beim Entfernen des Termins');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Netzwerkfehler beim Versuch, einen Termin zu entfernen:', error);
+                        showErrorToast('Netzwerkfehler beim Versuch, einen Termin zu entfernen');
+                    });
+
+            });
+
+            const placeholder = document.createElement('span');
+            placeholder.style.flexGrow = '1';
+
+            dateItem.appendChild(placeholder);
+
+            dateItem.appendChild(removeIcon);
+        }
 
         // Fügt das Listenelement zur Liste hinzu
         terminList.appendChild(dateItem);
-        console.log('terminList', terminList);
+
 
         // Only display the last 5 dates
         if (terminList.children.length > 5) {
@@ -520,5 +642,82 @@ const leaveGroup = async (groupId) => {
     } catch (error) {
         showErrorToast('Fehler beim Austritt aus der Gruppe');
         console.error('Fehler beim Fetchen:', error);
+    }
+};
+
+
+
+function getQueryParams() {
+    const params = {};
+    const queryString = window.location.search.substring(1);
+    const regex = /([^&=]+)=([^&]*)/g;
+    let m;
+
+    while (m = regex.exec(queryString)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+
+    return params;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.querySelector('#gruppen-container'); // Adjust selector to your actual container
+
+
+    if (!container) {
+        return;
+    }
+
+    const observer = new MutationObserver(function (mutationsList, observer) {
+        // Check if the highlightedGroup element is now present
+        const queryParams = getQueryParams();
+        const highlightedGroup = queryParams['highlightedGroup'];
+        const targetElement = document.querySelector(`[data-group-id="${highlightedGroup}"]`);
+
+        if (targetElement) {
+            observer.disconnect(); // Stop observing once we've found our element
+            const boundShowGroupInfoModal = showGroupInfoModal.bind(targetElement);
+            boundShowGroupInfoModal();
+        }
+    });
+
+    // Configuration of the observer:
+    const config = { childList: true, subtree: true };
+
+    // Start observing the target node for configured mutations
+    observer.observe(container, config);
+});
+
+
+const deleteGroup = async (groupId) => {
+    const jwtToken = localStorage.getItem('jwtToken');
+
+
+    // Pop-up to confirm the deletion
+    const confirmation = confirm('Sind Sie sicher, dass Sie diese Gruppe auflösen möchten?');
+    if (!confirmation) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        });
+
+        if (response.ok) {
+            showSuccessToast('Gruppe erfolgreich gelöscht.');
+            // Refresh the group cards to reflect the deletion
+            refreshGroupCards();
+        } else {
+            const errorText = await response.text();
+            showErrorToast(`Fehler beim Löschen der Gruppe: ${errorText}`);
+            console.error('Error deleting group:', errorText);
+        }
+    } catch (error) {
+        showErrorToast('Fehler beim Löschen der Gruppe');
+        console.error('Error deleting group:', error);
     }
 };

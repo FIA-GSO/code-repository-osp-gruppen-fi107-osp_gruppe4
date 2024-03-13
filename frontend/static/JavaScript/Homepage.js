@@ -116,12 +116,12 @@ const createUserCountContainer = async (gruppe, userId) => {
                 progressBar.style.width = `${percentage}%`;
                 progressBar.style.backgroundColor = percentage < 50 ? '#28a745' : percentage < 75 ? '#ffa500' : '#f44336';
             }, 10); // Minimal delay for CSS transition to take effect
-        
+
             $(userCountContainer).attr('title', `${data.length}/${gruppe.maxUsers} Mitglieder`).tooltip('_fixTitle');
         } else {
             throw new Error('Nutzer der Gruppe konnten nicht gelesen werden.');
         }
-        
+
     } catch (error) {
         console.error(error);
     }
@@ -522,3 +522,46 @@ const leaveGroup = async (groupId) => {
         console.error('Fehler beim Fetchen:', error);
     }
 };
+
+
+
+function getQueryParams() {
+    const params = {};
+    const queryString = window.location.search.substring(1);
+    const regex = /([^&=]+)=([^&]*)/g;
+    let m;
+
+    while (m = regex.exec(queryString)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+
+    return params;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.querySelector('#gruppen-container'); // Adjust selector to your actual container
+
+
+    if (!container) {
+        return;
+    }
+
+    const observer = new MutationObserver(function (mutationsList, observer) {
+        // Check if the highlightedGroup element is now present
+        const queryParams = getQueryParams();
+        const highlightedGroup = queryParams['highlightedGroup'];
+        const targetElement = document.querySelector(`[data-group-id="${highlightedGroup}"]`);
+
+        if (targetElement) {
+            observer.disconnect(); // Stop observing once we've found our element
+            const boundShowGroupInfoModal = showGroupInfoModal.bind(targetElement);
+            boundShowGroupInfoModal();
+        }
+    });
+
+    // Configuration of the observer:
+    const config = { childList: true, subtree: true };
+
+    // Start observing the target node for configured mutations
+    observer.observe(container, config);
+});

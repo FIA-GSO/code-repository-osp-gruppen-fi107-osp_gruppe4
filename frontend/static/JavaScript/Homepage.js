@@ -279,10 +279,64 @@ async function showGroupInfoModal(event) {
         memberItem.appendChild(placeholder);
         memberItem.appendChild(memberJoinedDate);
 
+        // Get the user ID from the local storage
+        const userId = localStorage.getItem('userId');
+
+        // Only the group owner sees the remove option and cannot remove themselves
+        if (String(userId) === String(ownerId) && String(member.userID) !== String(ownerId)) {
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'bi bi-x-circle';
+            removeIcon.style.color = 'red';
+            removeIcon.style.marginLeft = '10px';
+            removeIcon.style.cursor = 'pointer';
+
+            removeIcon.addEventListener('click', function () {
+                const isConfirmed = confirm("Sind Sie sicher, dass Sie dieses Mitglied aus der Gruppe entfernen möchten?");
+                if (!isConfirmed) {
+                    // User clicked 'Cancel', abort the function
+                    return;
+                }
+
+                // Assuming the structure is: li > (other elements) > button (this)
+                const listItem = this.closest('li');
+
+                // Fetch API to call the endpoint for deleting a user from a group
+                const jwtToken = localStorage.getItem('jwtToken'); // Assuming you store your JWT in localStorage
+                fetch(`${BASE_URL}/users_in_groups/${member.userID}/${groupId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`, // Send the JWT in the Authorization header
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // The user was successfully removed from the group
+                            showSuccessToast('Mitglied erfolgreich aus der Gruppe entfernt');
+                            // Remove the list item from the DOM
+                            listItem.remove();
+                        } else {
+                            // Handle non-OK responses
+                            response.text().then(text => {
+                                console.error('Error removing member from group:', text);
+                                showErrorToast('Fehler beim Entfernen des Mitglieds aus der Gruppe');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        // Handle network errors
+                        console.error('Network error when trying to remove member:', error);
+                        showErrorToast('Netzwerkfehler beim Versuch, ein Mitglied zu entfernen');
+                    });
+            });
+
+            memberItem.appendChild(removeIcon);
+        }
+
         memberItem.classList.add('no-padding');
 
         // Fügt das Listenelement zur Liste hinzu
         membersList.appendChild(memberItem);
+
     });
 
     // Fetch group dates (Termine) and update the modal

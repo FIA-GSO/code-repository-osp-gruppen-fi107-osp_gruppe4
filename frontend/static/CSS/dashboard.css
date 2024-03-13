@@ -176,6 +176,12 @@
     /* Adds a subtle shadow like a card */
   }
 
+  .icon-match-text {
+    cursor: pointer;
+    color: #477cf5;
+    font-size: 1.25rem; /* Adjust this value based on your needs or the specific font size of your h5 text */
+}
+
   .modal-header h5 {
     font-weight: bold;
     font-size: 1.5rem;
@@ -259,3 +265,33 @@
     transition: all 0.3s ease;
     /* Smooth transition for all hover effects */
   }
+
+
+  .add-date-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.bi-plus-circle {
+    cursor: pointer;
+    color: #477cf5;
+    font-size: 2rem; /* Adjust for a larger plus icon, making it more noticeable */
+}
+
+.bi-plus-circle:hover {
+  color: #3658a4; /* Darker shade of blue for hover effect */
+}
+
+.modal-body {
+  padding-bottom: 0%;
+  padding-top: 0%;
+}
+
+.modal-footer {
+  padding-top: 0%;
+}
+
+#idList {
+  margin-bottom: 0;
+}

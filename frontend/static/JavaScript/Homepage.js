@@ -206,6 +206,9 @@ async function showGroupInfoModal(event) {
     const ownerId = this.dataset.ownerId;
     const groupId = this.dataset.groupId; // Make sure this is set correctly
 
+    // Set ownerId in local storage (Hack but works)
+    localStorage.setItem('ownerId', ownerId);
+
     // Show preliminary data in the modal
     document.getElementById('groupInfoModalLabel').textContent = title;
     document.getElementById('groupDescription').textContent = description;
@@ -348,6 +351,10 @@ async function showGroupInfoModal(event) {
     const dates = await fetchGroupDates(groupId);
     const terminList = document.getElementById('terminList');
     terminList.innerHTML = ''; // Clear previous entries
+
+    // Sort the dates by date so the upcoming ones are first
+    dates.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     dates.forEach(date => {
 
         console.log('date', date);
@@ -379,7 +386,7 @@ async function showGroupInfoModal(event) {
             editIcon.className = 'bi bi-pencil-square';
             editIcon.style.color = '#316ff8';
             editIcon.style.marginLeft = '5px';
-            editIcon.style.marginRight = '0px';    
+            editIcon.style.marginRight = '0px';
             editIcon.style.cursor = 'pointer';
             editIcon.addEventListener('click', function () {
                 // Open the modal for editing
@@ -465,11 +472,24 @@ async function showGroupInfoModal(event) {
 
 
         // Only display the last 5 dates
-        if (terminList.children.length > 5) {
-            terminList.children[0].remove();
+        // if (terminList.children.length > 5) {
+        //     terminList.children[0].remove();
+        // }
+    });
+    
+    adjustAddDateIconVisibility(userId, ownerId);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const plusIcon = document.querySelector('.bi-plus-circle');
+        if (plusIcon) { // Check if the element exists
+            plusIcon.addEventListener('click', function () {
+                openAddDateModal(groupId); // Ensure groupId is accessible here
+            });
+        } else {
+            console.log('Plus icon not found');
         }
     });
-
+    
 
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip(); // Initialisiert alle Tooltips auf der Seite
@@ -478,6 +498,185 @@ async function showGroupInfoModal(event) {
     // Modal anzeigen
     $('#groupInfoModal').modal('show');
 }
+
+function adjustAddDateIconVisibility(userId, ownerId) {
+    const terminContainer = document.getElementById('terminContainer');
+    // Attempt to find an existing .add-date-icon-container within terminContainer
+    let addDateIconContainer = terminContainer.querySelector('.add-date-icon-container');
+
+    if (String(userId) === String(ownerId)) {
+        // If the user is the owner but the icon container doesn't exist, create and append it
+        if (!addDateIconContainer) {
+            addDateIconContainer = document.createElement('div');
+            addDateIconContainer.className = 'add-date-icon-container';
+            addDateIconContainer.setAttribute('onclick', 'openAddDateModal()');
+            addDateIconContainer.innerHTML = `<i class="bi bi-plus-circle" style="cursor: pointer; color: #477cf5; font-size: 2rem;"></i>`;
+            terminContainer.appendChild(addDateIconContainer);
+        }
+    } else {
+        // If the user is not the owner and the icon container exists, remove it
+        if (addDateIconContainer) {
+            addDateIconContainer.remove();
+        }
+    }
+}
+
+function openAddDateModal() {
+    const groupId = localStorage.getItem('groupId');
+    document.getElementById('addGroupId').value = groupId; // Assuming you have an input field with id="addGroupId" within the modal
+    $('#addDateModal').modal('show');
+}
+
+
+async function addDate() {
+    const dateValue = document.getElementById('dateInput').value;
+    const placeValue = document.getElementById('placeInput').value;
+    const maxUsersValue = document.getElementById('maxUsersInput').value;
+    const groupID = document.getElementById('addGroupId').value; // Ensure this hidden input exists
+
+    const newDate = {
+        date: dateValue,
+        place: placeValue,
+        maxUsers: maxUsersValue,
+        groupID: groupID // Use the correct groupID
+    };
+
+    const jwtToken = localStorage.getItem('jwtToken'); // Assuming JWT is stored in localStorage
+
+    try {
+        const response = await fetch(`${BASE_URL}/dates`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newDate)
+        });
+
+        if (response.ok) {
+            const responseData = await response.json(); // Parse JSON response
+            showSuccessToast('Neuer Termin erfolgreich erstellt');
+            $('#addDateModal').modal('hide'); // Hide the modal
+
+            // Append the new date to the list using the dateID from the response
+            const newDateDetails = {
+                id: responseData.dateID, // Use the dateID from the server response
+                date: dateValue,
+                place: placeValue,
+                maxUsers: maxUsersValue
+            };
+
+            showSuccessToast('Neuer Termin erfolgreich erstellt');
+            $('#addDateModal').modal('hide');
+
+
+            // Now create and append the new date item
+            const newDateItem = document.createElement('li');
+            newDateItem.style.listStyleType = 'none';
+            newDateItem.style.padding = '10px';
+            newDateItem.style.borderBottom = '1px solid #eee';
+            newDateItem.style.display = 'flex';
+            newDateItem.style.alignItems = 'center';
+            newDateItem.style.paddingLeft = '0px';
+            newDateItem.style.paddingRight = '0px';
+            newDateItem.setAttribute('data-date-id', newDateDetails.id);
+
+            const dateInfo = document.createElement('span');
+            dateInfo.textContent = `${new Date(newDateDetails.date).toLocaleDateString()} @ ${newDateDetails.place}`;
+            dateInfo.style.fontWeight = 'bold';
+            newDateItem.appendChild(dateInfo);
+
+            // Create "Neu" Badge
+            const now = new Date();
+            const joinedDate = new Date(newDateDetails.date);
+            const hoursSinceJoined = Math.abs(now - joinedDate) / 36e5;
+            if (hoursSinceJoined <= 72) {
+                const newBadge = createBadge('Neu', 'bg-secondary');
+                newDateItem.appendChild(newBadge);
+            }
+
+
+            isOwner = String(localStorage.getItem('userId')) === String(newDateDetails.ownerID);
+
+            // Append maxUsers if available
+            if (newDateDetails.maxUsers) {
+                const maxUsersSpan = document.createElement('span');
+                maxUsersSpan.textContent = ` Maximale Teilnehmer: ${newDateDetails.maxUsers}`;
+                maxUsersSpan.className = 'max-users';
+                maxUsersSpan.style.fontSize = '0.8em';
+                maxUsersSpan.style.marginLeft = '5px';
+                maxUsersSpan.style.color = '#666';
+                newDateItem.appendChild(maxUsersSpan);
+            }
+
+            if (isOwner) {
+                const removeIcon = document.createElement('i');
+                removeIcon.className = 'bi bi-x-circle';
+                removeIcon.style.color = 'red';
+
+                removeIcon.style.cursor = 'pointer';
+
+                removeIcon.addEventListener('click', function () {
+                    const isConfirmed = confirm("Sind Sie sicher, dass Sie den Termin am " + new Date(date.date).toLocaleDateString() + " entfernen möchten?");
+                    if (!isConfirmed) {
+                        // User clicked 'Cancel', abort the function
+                        return;
+                    }
+
+                    fetch(`${BASE_URL}/dates/${date.id}`, { // Ensure date.dateId is the correct property name for your date's unique ID
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, // Correctly setting the Authorization header
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                showSuccessToast('Termin erfolgreich entfernt');
+                                dateItem.remove(); // Remove the date from the list
+                            } else {
+                                response.text().then(text => {
+                                    console.error('Fehler beim Entfernen des Termins:', text);
+                                    showErrorToast('Fehler beim Entfernen des Termins');
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Netzwerkfehler beim Versuch, einen Termin zu entfernen:', error);
+                            showErrorToast('Netzwerkfehler beim Versuch, einen Termin zu entfernen');
+                        });
+
+                });
+
+                const placeholder = document.createElement('span');
+                placeholder.style.flexGrow = '1';
+
+                dateItem.appendChild(placeholder);
+
+                dateItem.appendChild(removeIcon);
+            }
+
+            // Finally, append the new date item to the list
+            document.getElementById('terminList').appendChild(newDateItem);
+
+            // Optionally, you might want to clear the input fields after adding
+            document.getElementById('dateInput').value = '';
+            document.getElementById('placeInput').value = '';
+            document.getElementById('maxUsersInput').value = '';
+
+        } else {
+            const errorText = await response.text();
+            console.error('Error creating new date:', errorText);
+            showErrorToast('Fehler beim Erstellen des neuen Termins');
+        }
+    } catch (error) {
+        console.error('Network error when trying to create new date:', error);
+        showErrorToast('Netzwerkfehler beim Versuch, einen neuen Termin zu erstellen');
+    }
+}
+
+
+
+
 
 async function fetchGroupDates(groupId) {
     try {

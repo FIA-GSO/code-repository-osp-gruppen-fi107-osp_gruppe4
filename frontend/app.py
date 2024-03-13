@@ -18,6 +18,10 @@ def create_group():
 def impressum():
     return render_template('impressum.html')
 
+@app.route('/datenschutz')
+def datenschutz():
+    return render_template('datenschutz.html')
+
 @app.route('/login')
 def login():
     return render_template('login.html')

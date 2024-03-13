@@ -154,6 +154,10 @@ const createActionButton = (gruppe, groupsOfUser, userId) => {
     } else if (userId == gruppe.ownerID) {
         actionButton.innerHTML = '<i class="bi bi-x-lg"></i> Auflösen';
         actionButton.classList.add("button-aufloesen");
+        actionButton.addEventListener('click', () => {
+            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
+            deleteGroup(gruppe.groupID);
+        });
     }
     return actionButton;
 };
@@ -565,3 +569,37 @@ document.addEventListener("DOMContentLoaded", function () {
     // Start observing the target node for configured mutations
     observer.observe(container, config);
 });
+
+
+const deleteGroup = async (groupId) => {
+    const jwtToken = localStorage.getItem('jwtToken');
+
+
+    // Pop-up to confirm the deletion
+    const confirmation = confirm('Sind Sie sicher, dass Sie diese Gruppe auflösen möchten?');
+    if (!confirmation) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        });
+
+        if (response.ok) {
+            showSuccessToast('Gruppe erfolgreich gelöscht.');
+            // Refresh the group cards to reflect the deletion
+            refreshGroupCards();
+        } else {
+            const errorText = await response.text();
+            showErrorToast(`Fehler beim Löschen der Gruppe: ${errorText}`);
+            console.error('Error deleting group:', errorText);
+        }
+    } catch (error) {
+        showErrorToast('Fehler beim Löschen der Gruppe');
+        console.error('Error deleting group:', error);
+    }
+};

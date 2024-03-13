@@ -22,6 +22,10 @@ def impressum():
 def datenschutz():
     return render_template('datenschutz.html')
 
+@app.route('/agb')
+def agb():
+    return render_template('agb.html')
+
 @app.route('/login')
 def login():
     return render_template('login.html')

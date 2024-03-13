@@ -287,7 +287,7 @@ async function showGroupInfoModal(event) {
             const removeIcon = document.createElement('i');
             removeIcon.className = 'bi bi-x-circle';
             removeIcon.style.color = 'red';
-            removeIcon.style.marginLeft = '10px';
+            removeIcon.style.marginLeft = '5px';
             removeIcon.style.cursor = 'pointer';
 
             removeIcon.addEventListener('click', function () {
@@ -349,6 +349,9 @@ async function showGroupInfoModal(event) {
     const terminList = document.getElementById('terminList');
     terminList.innerHTML = ''; // Clear previous entries
     dates.forEach(date => {
+
+        console.log('date', date);
+
         const dateItem = document.createElement('li');
         dateItem.style.listStyleType = 'none';
         dateItem.style.padding = '10px';
@@ -369,11 +372,44 @@ async function showGroupInfoModal(event) {
 
 
 
+
+        // Assuming 'userId' is the current user's ID and 'ownerId' is the group owner's ID
+        if (String(userId) === String(ownerId)) {
+            const editIcon = document.createElement('i');
+            editIcon.className = 'bi bi-pencil-square';
+            editIcon.style.color = '#316ff8';
+            editIcon.style.marginLeft = '5px';
+            editIcon.style.marginRight = '0px';    
+            editIcon.style.cursor = 'pointer';
+            editIcon.addEventListener('click', function () {
+                // Open the modal for editing
+                const editModal = document.getElementById('editDateModal');
+                // Populate modal fields with date information
+                document.getElementById('editDateInput').value = new Date(date.date).toISOString().substring(0, 10); // Assuming YYYY-MM-DD format
+                document.getElementById('editPlaceInput').value = date.place;
+                document.getElementById('editMaxUsersInput').value = date.maxUsers;
+                document.getElementById('editDateId').value = date.id; // Ensure this is the correct property for the date ID
+                // Show the modal
+                $('#editDateModal').modal('show');
+            });
+
+            // Append the edit icon only if the current user is the owner
+            dateItem.appendChild(editIcon);
+        }
+
+
+
         if (date.maxUsers) {
             const maxUsers = document.createElement('span');
             maxUsers.textContent = ` Maximale Teilnehmer: ${date.maxUsers}`;
             maxUsers.style.fontSize = '0.8em';
-            maxUsers.style.marginLeft = '15px';
+            maxUsers.style.marginLeft = '5px';
+            // Set data-date-id attribute to the date's ID
+            dateItem.setAttribute('data-date-id', date.id);
+
+            // Set a class for easier identification (.max-users)
+            maxUsers.className = 'max-users';
+
             maxUsers.style.color = '#666';
             dateItem.appendChild(maxUsers);
         }
@@ -382,7 +418,7 @@ async function showGroupInfoModal(event) {
             const removeIcon = document.createElement('i');
             removeIcon.className = 'bi bi-x-circle';
             removeIcon.style.color = 'red';
-            removeIcon.style.marginLeft = '10px';
+
             removeIcon.style.cursor = 'pointer';
 
             removeIcon.addEventListener('click', function () {
@@ -471,6 +507,61 @@ async function fetchGroupDates(groupId) {
     }
 }
 
+async function updateDate() {
+    const dateId = document.getElementById('editDateId').value;
+    const dateValue = document.getElementById('editDateInput').value;
+    const placeValue = document.getElementById('editPlaceInput').value;
+    const maxUsersValue = document.getElementById('editMaxUsersInput').value;
+
+    const updatedDate = {
+        date: dateValue,
+        place: placeValue,
+        maxUsers: maxUsersValue
+    };
+
+    const jwtToken = localStorage.getItem('jwtToken'); // Assuming JWT is stored in localStorage
+
+    try {
+        const response = await fetch(`${BASE_URL}/dates/${dateId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDate)
+        });
+
+        if (response.ok) {
+            showSuccessToast('Termin erfolgreich aktualisiert');
+            $('#editDateModal').modal('hide'); // Hide the modal
+
+            // Find the dateItem in the DOM using its data-date-id attribute
+            const dateItemToUpdate = document.querySelector(`[data-date-id="${dateId}"]`);
+            if (dateItemToUpdate) {
+                // Find the maxUsers span within this dateItem
+                const maxUsersSpan = dateItemToUpdate.querySelector('.max-users');
+                if (maxUsersSpan) {
+                    maxUsersSpan.textContent = ` Maximale Teilnehmer: ${maxUsersValue}`;
+                } else {
+                    // If for some reason the span wasn't found, create and append it
+                    const newMaxUsersSpan = document.createElement('span');
+                    newMaxUsersSpan.className = 'max-users'; // Add a class for easier identification
+                    newMaxUsersSpan.textContent = ` Maximale Teilnehmer: ${maxUsersValue}`;
+                    newMaxUsersSpan.style.fontSize = '0.8em';
+                    newMaxUsersSpan.style.color = '#666';
+                    dateItemToUpdate.appendChild(newMaxUsersSpan);
+                }
+            }
+        } else {
+            const errorText = await response.text();
+            console.error('Error updating date:', errorText);
+            showErrorToast('Fehler beim Aktualisieren des Termins');
+        }
+    } catch (error) {
+        console.error('Network error when trying to update date:', error);
+        showErrorToast('Netzwerkfehler beim Versuch, einen Termin zu aktualisieren');
+    }
+}
 
 
 

@@ -160,9 +160,12 @@
   }
 
   /* Custom CSS for an extra-large modal */
-  /* .modal-xl {
-  max-width: 70%; /* Adjust this value according to your needs */
-
+  .modal-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
   /* Custom styles for the modal to make it look like a card */
   .modal-content {
     border: none;

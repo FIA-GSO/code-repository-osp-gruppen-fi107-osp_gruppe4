@@ -721,3 +721,33 @@ const deleteGroup = async (groupId) => {
         console.error('Error deleting group:', error);
     }
 };
+
+function checkCookieConsent() {
+    var cookieDiv = document.getElementById('cb-cookie-banner')
+    var consent = localStorage.getItem('cookieConsentLBV');
+    console.log(consent)
+        if (consent == true) {
+            hideCookieBanner();
+        } else if (consent === null) {
+            showCookieBanner();
+        }
+}
+
+function showCookieBanner() {
+    let cookieBanner = document.getElementById("cb-cookie-banner");
+    cookieBanner.style.display = "block";
+}
+
+function hideCookieBanner() {
+    localStorage.setItem("cookieConsentLBV", true);
+    let cookieBanner = document.getElementById("cb-cookie-banner");
+    cookieBanner.style.display = "none";
+}
+
+function initializeCookieBanner() {
+    //showCookieBanner();
+    checkCookieConsent();
+}
+
+//window.onload = initializeCookieBanner();
+window.cb_hideCookieBanner = hideCookieBanner;

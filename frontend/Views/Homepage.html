@@ -12,7 +12,7 @@
   <title>LBV - Gruppen</title>
 </head>
 
-<body>
+<body onload="checkCookieConsent()">
   <header>
     <div class="logo-container">
       <a href="/"><img class="logo" src="{{ url_for('static', filename='media/favicon.svg') }}" alt="LBV Logo"></a>
@@ -48,6 +48,16 @@
 
     </nav>
   </header>
+
+  <div id="cb-cookie-banner" class="alert alert-dark text-center mb-0" role="alert">
+    🍪🛠️ Diese Webseite nutzt ausschließlich technisch notwendige Cookies. Weitere Informationen finden Sie in
+    unserer
+    <a href="/datenschutz">Datenschutzerklärung</a>.
+    <button type="button" class="btn btn-primary btn-sm ms-3" onclick="window.cb_hideCookieBanner()">
+        Alles klar!
+    </button>
+  </div>
+
   <main>
     <div class="gruppen-container" id="gruppen-container">
       <!-- Hier werden die Gruppen dynamisch eingefügt -->

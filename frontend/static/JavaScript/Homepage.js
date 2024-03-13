@@ -291,7 +291,7 @@ async function showGroupInfoModal(event) {
             removeIcon.style.cursor = 'pointer';
 
             removeIcon.addEventListener('click', function () {
-                const isConfirmed = confirm("Sind Sie sicher, dass Sie dieses Mitglied aus der Gruppe entfernen möchten?");
+                const isConfirmed = confirm("Sind Sie sicher, dass Sie " + member.name + " aus der Gruppe entfernen möchten?");
                 if (!isConfirmed) {
                     // User clicked 'Cancel', abort the function
                     return;
@@ -339,6 +339,11 @@ async function showGroupInfoModal(event) {
 
     });
 
+    // Get the user ID from the local storage
+    const userId = localStorage.getItem('userId');
+
+    const isOwner = String(userId) === String(ownerId);
+
     // Fetch group dates (Termine) and update the modal
     const dates = await fetchGroupDates(groupId);
     const terminList = document.getElementById('terminList');
@@ -351,6 +356,7 @@ async function showGroupInfoModal(event) {
         dateItem.style.display = 'flex';
         dateItem.style.alignItems = 'center';
         dateItem.style.paddingLeft = '0px';
+        dateItem.style.paddingRight = '0px';
 
         const dateInfo = document.createElement('span');
         dateInfo.textContent = `${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
@@ -372,10 +378,55 @@ async function showGroupInfoModal(event) {
             dateItem.appendChild(maxUsers);
         }
 
+        if (isOwner) {
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'bi bi-x-circle';
+            removeIcon.style.color = 'red';
+            removeIcon.style.marginLeft = '10px';
+            removeIcon.style.cursor = 'pointer';
+
+            removeIcon.addEventListener('click', function () {
+                const isConfirmed = confirm("Sind Sie sicher, dass Sie den Termin am " + new Date(date.date).toLocaleDateString() + " entfernen möchten?");
+                if (!isConfirmed) {
+                    // User clicked 'Cancel', abort the function
+                    return;
+                }
+
+                fetch(`${BASE_URL}/dates/${date.id}`, { // Ensure date.dateId is the correct property name for your date's unique ID
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, // Correctly setting the Authorization header
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            showSuccessToast('Termin erfolgreich entfernt');
+                            dateItem.remove(); // Remove the date from the list
+                        } else {
+                            response.text().then(text => {
+                                console.error('Fehler beim Entfernen des Termins:', text);
+                                showErrorToast('Fehler beim Entfernen des Termins');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Netzwerkfehler beim Versuch, einen Termin zu entfernen:', error);
+                        showErrorToast('Netzwerkfehler beim Versuch, einen Termin zu entfernen');
+                    });
+
+            });
+
+            const placeholder = document.createElement('span');
+            placeholder.style.flexGrow = '1';
+
+            dateItem.appendChild(placeholder);
+
+            dateItem.appendChild(removeIcon);
+        }
 
         // Fügt das Listenelement zur Liste hinzu
         terminList.appendChild(dateItem);
-        console.log('terminList', terminList);
+
 
         // Only display the last 5 dates
         if (terminList.children.length > 5) {

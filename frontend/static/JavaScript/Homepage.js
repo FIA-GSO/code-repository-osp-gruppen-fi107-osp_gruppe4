@@ -2,6 +2,20 @@
 const BASE_URL = "https://lbv.digital";
 const container = document.getElementById('gruppen-container');
 
+
+// Depending on if were on /my-groups or /, we need to make the navbar link bold
+const currentPath = window.location.pathname;
+if (currentPath === '/my-groups') {
+    document.getElementById('myGroupsLink').classList.add('active');
+    // Make myGroupsLink not clickable
+    document.getElementById('myGroupsLink').classList.add('disabled');
+} if (currentPath === '/') {
+    document.getElementById('allGroupsLink').classList.add('active');
+    // Make allGroupsLink not clickable
+    document.getElementById('allGroupsLink').classList.add('disabled');
+}
+
+
 // Helper functions
 const redirectToLoginIfUnauthorized = () => {
     const jwtToken = localStorage.getItem('jwtToken');
@@ -97,13 +111,17 @@ const createUserCountContainer = async (gruppe, userId) => {
         if (response.ok) {
             const data = await response.json();
             const percentage = (data.length / gruppe.maxUsers) * 100;
-            progressBar.style.width = `${percentage}%`;
-            progressBar.style.backgroundColor = percentage < 50 ? '#347bfa' : percentage < 75 ? '#ffa500' : '#f44336';
-
+            progressBar.style.width = '0%'; // Reset before animation
+            setTimeout(() => { // Start animation after reset
+                progressBar.style.width = `${percentage}%`;
+                progressBar.style.backgroundColor = percentage < 50 ? '#28a745' : percentage < 75 ? '#ffa500' : '#f44336';
+            }, 10); // Minimal delay for CSS transition to take effect
+        
             $(userCountContainer).attr('title', `${data.length}/${gruppe.maxUsers} Mitglieder`).tooltip('_fixTitle');
         } else {
             throw new Error('Nutzer der Gruppe konnten nicht gelesen werden.');
         }
+        
     } catch (error) {
         console.error(error);
     }
@@ -267,17 +285,22 @@ async function showGroupInfoModal(event) {
         dateInfo.textContent = `${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
         dateInfo.style.fontWeight = 'bold';
 
-        const maxUsers = document.createElement('span');
-        maxUsers.textContent = ` Maximale Teilnehmer: ${date.maxUsers}`;
-        maxUsers.style.fontSize = '0.8em';
-        maxUsers.style.marginLeft = '15px';
-        maxUsers.style.color = '#666';
-
-        console.log('date', date);
-
         // Fügt die erstellten Elemente zum Listenelement hinzu
         dateItem.appendChild(dateInfo);
-        dateItem.appendChild(maxUsers);
+
+        // if maxUsers is not set, the span will not be created
+
+
+
+        if (date.maxUsers) {
+            const maxUsers = document.createElement('span');
+            maxUsers.textContent = ` Maximale Teilnehmer: ${date.maxUsers}`;
+            maxUsers.style.fontSize = '0.8em';
+            maxUsers.style.marginLeft = '15px';
+            maxUsers.style.color = '#666';
+            dateItem.appendChild(maxUsers);
+        }
+
 
         // Fügt das Listenelement zur Liste hinzu
         terminList.appendChild(dateItem);

@@ -116,7 +116,7 @@
     display: flex;
     align-items: center;
   }
-  
+
   .icon-container {
     background-color: white;
     border-radius: 5px 0 0 5px;
@@ -126,18 +126,18 @@
     padding: 0 4px;
     height: 20px;
   }
-  
+
   .icon {
     -webkit-text-stroke: 0.5px;
     font-size: 1.3em;
   }
-  
+
   .progress-bar {
     height: 20px;
     border-radius: 0 5px 5px 0;
     transition: width 0.5s ease-in-out;
   }
-  
+
   nav {
     display: flex;
     align-items: center;
@@ -213,3 +213,31 @@
     /* Verwendet !important, um sicherzustellen, dass dieser Stil Vorrang hat */
     padding-right: 0 !important;
   }
+
+
+  .active {
+    font-weight: bold;
+    color: #000000;
+
+  }
+
+  .disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+
+
+
+  
+  .progress-bar {
+    width: 0;
+    transition: width 2s ease-out, background-color 0.5s ease; /* Smooth transition for width and background color */
+}
+
+/* Remove the @keyframes rule for loadProgress */
+
+/* General enhancements */
+.gruppen-info, .user-count-container, .icon-container {
+  transition: all 0.3s ease; /* Smooth transition for all hover effects */
+}

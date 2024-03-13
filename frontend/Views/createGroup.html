@@ -17,12 +17,13 @@
 
 <body>
   <header>
-    <div class="logo">
-      <img src="{{ url_for('static', filename='media/favicon.svg') }}" alt="LBV Logo">
+    <div class="logo-container">
+      <a href="/"><img class="logo" src="{{ url_for('static', filename='media/favicon.svg') }}" alt="LBV Logo"></a>
     </div>
     <nav>
-      <a href="/">Alle Gruppen</a>
-      <a href="/my-groups">Meine Gruppen</a>
+      <a href="/create-group" class="btn btn-dark create-group-btn"><i class="bi bi-plus-lg "></i> Neue Gruppe</a>
+      <a id="allGroupsLink" href="/">Alle Gruppen</a>
+      <a id="myGroupsLink" href="/my-groups">Meine Gruppen</a>
 
       <!-- Dropdown for profile picture and other options -->
       <div class="dropdown">
@@ -98,7 +99,7 @@
         <input type="text" id="gruppenname" placeholder="Gruppenname" class="form-input">
         <textarea id="beschreibung" placeholder="Beschreibung" class="form-input"></textarea>
         <input type="number" id="maxMitglieder" placeholder="Maximale Anzahl der Mitglieder" class="form-input">
-        <input type="date" id="termin" placeholder="Nächster Termin" class="form-input">
+        <!-- <input type="date" id="termin" placeholder="Nächster Termin" class="form-input"> -->
         <div class="form-buttons">
           <button id="abbrechenButton" class="btn btn-danger" onclick="window.location.href='/'">Abbrechen</button>
           <button id="neueGruppeErstellenButton" class="btn btn-primary">Gruppe erstellen</button>
@@ -110,6 +111,106 @@
 
 
 
+    <!-- TOAST STUFF - YOU CAN COPY AND PASTE THIS AND USE THE FUNCTIONS MENTIONED BELOW!!! -->
+
+    <div id="toastContainer">
+      <!-- Toasts will be added here -->
+    </div>
+
+
+    <style>
+      #toastContainer {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        z-index: 2000;
+      }
+
+      .toast {
+        border-radius: 5px;
+        margin-top: 10px;
+        opacity: 1;
+      }
+
+      .toast-success {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .toast-error {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .toast-info {
+        background-color: #ff9c07;
+        color: white;
+      }
+    </style>
+
+
+    <script>
+      function createToast(message, type) {
+        var toast = document.createElement('div');
+        var toastClasses = 'toast align-items-center text-white ';
+
+        switch (type) {
+          case 'success':
+            toastClasses += 'bg-success';
+            break;
+          case 'error':
+            toastClasses += 'bg-danger';
+            break;
+          case 'info':
+            toastClasses += 'bg-warning'; // Info class addition
+            break;
+          default:
+            toastClasses += 'bg-secondary'; // Fallback class
+        }
+
+        toast.className = toastClasses;
+        toast.role = 'alert';
+        toast.ariaLive = 'assertive';
+        toast.ariaAtomic = 'true';
+        toast.innerHTML = `
+      <div class="d-flex">
+          <div class="toast-body">${message}</div>
+      </div>
+  `;
+
+        toast.addEventListener('hidden.bs.toast', function () {
+          toast.remove();
+        });
+
+        document.getElementById('toastContainer').appendChild(toast);
+        return toast;
+      }
+
+      function showSuccessToast(message) {
+        var toastEl = createToast(message, 'success');
+        new bootstrap.Toast(toastEl, { delay: 5000 }).show();
+      }
+
+      function showErrorToast(message) {
+        var toastEl = createToast(message, 'error');
+        new bootstrap.Toast(toastEl, { delay: 10000 }).show();
+      }
+
+      function showInfoToast(message) {
+        var toastEl = createToast(message, 'info');
+        new bootstrap.Toast(toastEl, { delay: 7000 }).show(); // Using a custom delay for info messages
+      }
+
+      // Example usage
+      // showSuccessToast('This is a success message!');
+      // showErrorToast('This is an error message!');
+      // showInfoToast('This is an informational message!');
+    </script>
+
+
+    <!-- TOAST END -->
   </main>
 
 

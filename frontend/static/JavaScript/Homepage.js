@@ -2,6 +2,20 @@
 const BASE_URL = "https://lbv.digital";
 const container = document.getElementById('gruppen-container');
 
+
+// Depending on if were on /my-groups or /, we need to make the navbar link bold
+const currentPath = window.location.pathname;
+if (currentPath === '/my-groups') {
+    document.getElementById('myGroupsLink').classList.add('active');
+    // Make myGroupsLink not clickable
+    document.getElementById('myGroupsLink').classList.add('disabled');
+} if (currentPath === '/') {
+    document.getElementById('allGroupsLink').classList.add('active');
+    // Make allGroupsLink not clickable
+    document.getElementById('allGroupsLink').classList.add('disabled');
+}
+
+
 // Helper functions
 const redirectToLoginIfUnauthorized = () => {
     const jwtToken = localStorage.getItem('jwtToken');
@@ -97,13 +111,17 @@ const createUserCountContainer = async (gruppe, userId) => {
         if (response.ok) {
             const data = await response.json();
             const percentage = (data.length / gruppe.maxUsers) * 100;
-            progressBar.style.width = `${percentage}%`;
-            progressBar.style.backgroundColor = percentage < 50 ? '#347bfa' : percentage < 75 ? '#ffa500' : '#f44336';
+            progressBar.style.width = '0%'; // Reset before animation
+            setTimeout(() => { // Start animation after reset
+                progressBar.style.width = `${percentage}%`;
+                progressBar.style.backgroundColor = percentage < 50 ? '#28a745' : percentage < 75 ? '#ffa500' : '#f44336';
+            }, 10); // Minimal delay for CSS transition to take effect
 
             $(userCountContainer).attr('title', `${data.length}/${gruppe.maxUsers} Mitglieder`).tooltip('_fixTitle');
         } else {
             throw new Error('Nutzer der Gruppe konnten nicht gelesen werden.');
         }
+
     } catch (error) {
         console.error(error);
     }
@@ -136,6 +154,10 @@ const createActionButton = (gruppe, groupsOfUser, userId) => {
     } else if (userId == gruppe.ownerID) {
         actionButton.innerHTML = '<i class="bi bi-x-lg"></i> Auflösen';
         actionButton.classList.add("button-aufloesen");
+        actionButton.addEventListener('click', () => {
+            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
+            deleteGroup(gruppe.groupID);
+        });
     }
     return actionButton;
 };
@@ -254,7 +276,6 @@ async function showGroupInfoModal(event) {
     const dates = await fetchGroupDates(groupId);
     const terminList = document.getElementById('terminList');
     terminList.innerHTML = ''; // Clear previous entries
-    console.log('dates HALLLO????', dates);
     dates.forEach(date => {
         const dateItem = document.createElement('li');
         dateItem.style.listStyleType = 'none';
@@ -265,20 +286,25 @@ async function showGroupInfoModal(event) {
         dateItem.style.paddingLeft = '0px';
 
         const dateInfo = document.createElement('span');
-        dateInfo.textContent = `Termin am ${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
+        dateInfo.textContent = `${new Date(date.date).toLocaleDateString()} @ ${date.place}`;
         dateInfo.style.fontWeight = 'bold';
-
-        const maxUsers = document.createElement('span');
-        maxUsers.textContent = ` Maximale Teilnehmer: ${date.maxUsers}`;
-        maxUsers.style.fontSize = '0.8em';
-        maxUsers.style.marginLeft = '15px';
-        maxUsers.style.color = '#666';
-
-        console.log('date', date);
 
         // Fügt die erstellten Elemente zum Listenelement hinzu
         dateItem.appendChild(dateInfo);
-        dateItem.appendChild(maxUsers);
+
+        // if maxUsers is not set, the span will not be created
+
+
+
+        if (date.maxUsers) {
+            const maxUsers = document.createElement('span');
+            maxUsers.textContent = ` Maximale Teilnehmer: ${date.maxUsers}`;
+            maxUsers.style.fontSize = '0.8em';
+            maxUsers.style.marginLeft = '15px';
+            maxUsers.style.color = '#666';
+            dateItem.appendChild(maxUsers);
+        }
+
 
         // Fügt das Listenelement zur Liste hinzu
         terminList.appendChild(dateItem);
@@ -302,7 +328,8 @@ async function showGroupInfoModal(event) {
 async function fetchGroupDates(groupId) {
     try {
         const jwtToken = localStorage.getItem('jwtToken');
-        const response = await fetch(`${BASE_URL}/dates`, {
+        // Adjusted URL to include groupId in the request path
+        const response = await fetch(`${BASE_URL}/groups/${groupId}/dates`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
@@ -316,7 +343,8 @@ async function fetchGroupDates(groupId) {
         const dates = await response.json();
         console.log('Fetched group dates:', dates);
 
-        return dates
+        // This now correctly returns only the dates for the specific group
+        return dates;
 
 
     } catch (error) {
@@ -324,6 +352,7 @@ async function fetchGroupDates(groupId) {
         return [];
     }
 }
+
 
 
 
@@ -495,5 +524,82 @@ const leaveGroup = async (groupId) => {
     } catch (error) {
         showErrorToast('Fehler beim Austritt aus der Gruppe');
         console.error('Fehler beim Fetchen:', error);
+    }
+};
+
+
+
+function getQueryParams() {
+    const params = {};
+    const queryString = window.location.search.substring(1);
+    const regex = /([^&=]+)=([^&]*)/g;
+    let m;
+
+    while (m = regex.exec(queryString)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+
+    return params;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.querySelector('#gruppen-container'); // Adjust selector to your actual container
+
+
+    if (!container) {
+        return;
+    }
+
+    const observer = new MutationObserver(function (mutationsList, observer) {
+        // Check if the highlightedGroup element is now present
+        const queryParams = getQueryParams();
+        const highlightedGroup = queryParams['highlightedGroup'];
+        const targetElement = document.querySelector(`[data-group-id="${highlightedGroup}"]`);
+
+        if (targetElement) {
+            observer.disconnect(); // Stop observing once we've found our element
+            const boundShowGroupInfoModal = showGroupInfoModal.bind(targetElement);
+            boundShowGroupInfoModal();
+        }
+    });
+
+    // Configuration of the observer:
+    const config = { childList: true, subtree: true };
+
+    // Start observing the target node for configured mutations
+    observer.observe(container, config);
+});
+
+
+const deleteGroup = async (groupId) => {
+    const jwtToken = localStorage.getItem('jwtToken');
+
+
+    // Pop-up to confirm the deletion
+    const confirmation = confirm('Sind Sie sicher, dass Sie diese Gruppe auflösen möchten?');
+    if (!confirmation) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/groups/${groupId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        });
+
+        if (response.ok) {
+            showSuccessToast('Gruppe erfolgreich gelöscht.');
+            // Refresh the group cards to reflect the deletion
+            refreshGroupCards();
+        } else {
+            const errorText = await response.text();
+            showErrorToast(`Fehler beim Löschen der Gruppe: ${errorText}`);
+            console.error('Error deleting group:', errorText);
+        }
+    } catch (error) {
+        showErrorToast('Fehler beim Löschen der Gruppe');
+        console.error('Error deleting group:', error);
     }
 };

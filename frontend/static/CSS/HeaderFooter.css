@@ -1,86 +1,102 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    overflow-y: auto
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  overflow-y: auto
+}
 
-  header {
-    background-color: #fcfcfc;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+header {
+  background-color: #fcfcfc;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .logo img {
-    width: 70px;
-  }
+.logo-container img {
+  width: 70px;
+}
 
-  nav {
-    display: flex;
-    align-items: center;
-  }
+/* Make class "logo" enlarge on hover (Smooth) */
+.logo-container img:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
 
-  nav a {
-    color: #000000;
-    text-decoration: none;
-    margin: 0 10px;
-  }
 
-  nav a:hover {
-    text-decoration: underline;
-  }
+nav {
+  display: flex;
+  align-items: center;
+}
 
-  .profile-wrapper {
-    position: relative;
-  }
+nav a {
+  color: #000000;
+  text-decoration: none;
+  margin: 0 10px;
+}
 
-  #profilePicture {
-    /* Add shadow */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+nav a:hover {
+  text-decoration: underline;
+}
 
-    /* Add transition for smooth animation */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 48px; 
-    width: 48px; 
-  }
+.profile-wrapper {
+  position: relative;
+}
 
-  #profilePicture:hover {
-    /* Enlarge on hover */
-    transform: scale(1.1);
+#profilePicture {
+  /* Add shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-    /* Increase shadow size on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .impressum-link {
-    color: #ffffff; /* Change text color to white */
-    text-decoration: none; /* Remove underline from links */
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-  }
-  
-  /* Optional: Add a hover effect */
-  .impressum-link:hover {
-    color: #000000; /* Change text color on hover if needed */
-  }
-  
-  
+  /* Add transition for smooth animation */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 48px;
+  width: 48px;
+}
 
-  .create-group-btn {
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for background color and scaling */
+#profilePicture:hover {
+  /* Enlarge on hover */
+  transform: scale(1.1);
+
+  /* Increase shadow size on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.impressum-link {
+  color: #ffffff;
+  /* Change text color to white */
+  text-decoration: none;
+  /* Remove underline from links */
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+/* Optional: Add a hover effect */
+.impressum-link:hover {
+  color: #000000;
+  /* Change text color on hover if needed */
+}
+
+
+
+.create-group-btn {
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* Smooth transition for background color and scaling */
 }
 
 .create-group-btn:hover {
-    transform: scale(1.03); /* Slightly scale the button up */
+  transform: scale(1.03);
+  /* Slightly scale the button up */
 }
 
-  .create-group-btn, .create-group-btn:link, .create-group-btn:visited, .create-group-btn:hover, .create-group-btn:active {
-    text-decoration: none;
+.create-group-btn,
+.create-group-btn:link,
+.create-group-btn:visited,
+.create-group-btn:hover,
+.create-group-btn:active {
+  text-decoration: none;
 }

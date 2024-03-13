@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>AGB</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/HeaderFooter.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='media/favicon.ico') }}">
+</head>
+
+<body>
+  <header>
+    <div class="logo-container">
+      <a href="/"><img class="logo" src="{{ url_for('static', filename='media/favicon.svg') }}" alt="LBV Logo"></a>
+    </div>
+    <nav>
+      <a href="/create-group" class="btn btn-dark create-group-btn"><i class="bi bi-plus-lg"></i> Neue Gruppe</a>
+      <a id="allGroupsLink" href="/">Alle Gruppen</a>
+      <a id="myGroupsLink" href="/my-groups">Meine Gruppen</a>
+
+      <!-- Dropdown for profile picture and other options -->
+      <div class="dropdown">
+        <img id="profilePicture" class="rounded-circle dropdown-toggle" style="object-fit: cover; cursor: pointer;"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" alt="Profile Picture" title="Profiloptionen"
+          draggable="false" src="https://via.placeholder.com/150">
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="/profile" style="margin: 0 0;">
+            <i class="bi bi-person-circle mr-2"></i>Profil
+          </a>
+          <a class="dropdown-item" href="https://github.com/jexxme/groupManagementAPI/blob/main/readme.md"
+            target="_blank" style="margin: 0 0;">
+            <i class="bi bi-file-earmark-text mr-2"></i>Dokumentation
+          </a>
+          <a id="adminPanel" class="dropdown-item" href="https://lbv.digital/" target="_blank" style="margin: 0 0;">
+            <i class="bi bi-gear mr-2"></i>Admin Panel
+          </a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item text-danger" id="logoutButton">
+            <i class="bi bi-box-arrow-right mr-2"></i>Ausloggen
+          </button>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+
+  <body>
+    <main>
+        <div id="info-container">
+
+            <h1>
+                Allgemeine Geschäftsbedingungen des Lerngruppen Bildungs- und Verwaltungstools<br />
+            </h1>
+        
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§1 Geltungsbereich</p>
+            (1) Die nachfolgenden Allgemeinen Geschäftsbedingungen gelten für die Nutzung des Lerngruppen Bildungs- und Verwaltungstools  zwischen dem Betreiber und den Schülern des Simon-Georg-Ohm Berufskollegs (nachfolgend "Nutzer").<br />
+            <br />
+            (2) Nutzer im Sinne dieser AGB sind ausschließlich Schüler des Simon-Georg-Ohm Berufskollegs.
+        
+            <br />
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§2 Vertragsschluss, Speicherung des Vertragstextes</p>
+            (1) Die Nutzung des Lerngruppen Bildungs- und Verwaltungstools erfolgt durch Registrierung auf der Website des Tools.<br />
+            <br />
+            (2) Im Falle der Registrierung kommt der Nutzungsvertrag zustande mit dem Betreiber des Lerngruppen Bildungs- und Verwaltungstools :<br />
+        
+            <div style="font-weight: bold; margin-left: 20px;">
+                <br />
+                Betreiber des Lerngruppen Bildungs- und Verwaltungstools <br />
+                Beispielstraße 123<br />
+                12345 Musterstadt<br />
+            </div>
+            <br />
+            (3) Die Erstellung einer Lerngruppe stellt ein bindendes Angebot zur Nutzung des Tools dar. Mit der Bestätigung der Lerngruppen-Erstellung durch den Betreiber kommt der Vertrag zustande.<br />
+            <br />
+        
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§3 Nutzungsentgelt, Zahlung, Fälligkeit</p>
+            (1) Die Nutzung des Lerngruppen Bildungs- und Verwaltungstools  ist kostenfrei für die Nutzer.<br />
+            <br />
+            
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§4 Leistungsumfang und Verfügbarkeit</p>
+            (1) Der Betreiber gewährleistet die Verfügbarkeit und Funktionsfähigkeit des Lerngruppen Bildungs- und Verwaltungstools im Rahmen der technischen und betrieblichen Möglichkeiten.<br />
+            <br />
+        
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§5 Haftung</p>
+            (1) Der Betreiber haftet nicht für Schäden, die durch die Nutzung des Lerngruppen Bildungs- und Verwaltungstools entstehen, es sei denn, sie beruhen auf grober Fahrlässigkeit oder Vorsatz des Betreibers oder seiner Erfüllungsgehilfen.<br />
+            <br />
+        
+        
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§6 Änderungen der AGB</p>
+            (1) Der Betreiber behält sich das Recht vor, diese AGB jederzeit ohne Nennung von Gründen zu ändern.<br />
+            <br />
+        
+            <br />
+            <p style="font-weight: bold; padding-bottom: 10px;">§7 Schlussbestimmungen</p>
+            (1) Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.<br />
+            <br />
+            (2) Gerichtsstand für alle Streitigkeiten aus diesem Vertrag ist der Sitz des Betreibers, sofern der Nutzer Kaufmann, juristische Person des öffentlichen Rechts oder öffentlich-rechtliches Sondervermögen ist.<br />
+            <br />
+        
+            <br />
+            <p>Stand der AGB März 2024</p>
+        </div>
+        
+    </main>
+
+    <footer class="container p-3 mb-3 " id="footer">
+      <!--headerfooter.js füllt den footer-->
+  </footer>
+    <script src="../JavaScript/Homepage.js"></script>
+    <script src="../JavaScript/fetch_pb.js"></script>
+    <script src="../JavaScript/headerFooter.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+      </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous">
+      </script>
+  </body>
+
+</html>

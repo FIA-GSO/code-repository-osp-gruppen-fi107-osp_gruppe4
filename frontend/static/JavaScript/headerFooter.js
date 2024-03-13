@@ -38,10 +38,11 @@ link3.classList.add('nav-link', 'px-2', 'text-muted')
 link4.classList.add('nav-link', 'px-2', 'text-muted')
 link1.innerHTML = 'Impressum';
 link2.innerHTML = 'Datenschutz';
-link3.innerHTML = 'link3';
+link3.innerHTML = 'AGB';
 link4.innerHTML = 'link4';
 link1.href = '/impressum';
 link2.href = '/datenschutz';
+link3.href = '/agb'
 const copyrightContainer = document.createElement('ul');
 const linkList5 = document.createElement('li');
 copyrightContainer.classList.add('nav', 'col-12', 'col-lg-auto', 'justify-content-end');
@@ -56,7 +57,7 @@ linkList3.appendChild(link3);
 linkList4.appendChild(link4);
 links.appendChild(linkList1);
 links.appendChild(linkList2);
-//links.appendChild(linkList3);
+links.appendChild(linkList3);
 //links.appendChild(linkList4);
 flexWrap.appendChild(links);
 flexWrap.appendChild(copyrightContainer)

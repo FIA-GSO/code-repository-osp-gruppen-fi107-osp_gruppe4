@@ -66,7 +66,8 @@ const createGroupElement = async (gruppe, groupsOfUser, userId) => {
     const userCountContainer = await createUserCountContainer(gruppe, userId);
     gruppenInfo.appendChild(userCountContainer); // This now waits for the promise to resolve
     gruppenInfo.appendChild(createElementWithText('p', gruppe.termin));
-    const actionButton = await createActionButton(gruppe, groupsOfUser, userId); // Make sure createActionButton is async if it needs to be
+
+    const actionButton = createActionButton(gruppe, groupsOfUser, userId, userCountContainer);
     gruppenInfo.appendChild(actionButton);
 
     gruppenInfo.addEventListener('click', showGroupInfoModal);
@@ -111,6 +112,11 @@ const createUserCountContainer = async (gruppe, userId) => {
         if (response.ok) {
             const data = await response.json();
             const percentage = (data.length / gruppe.maxUsers) * 100;
+
+            // Save as a data attribute of gruppenInfo
+            userCountContainer.dataset.userCount = data.length;
+            userCountContainer.dataset.maxUsers = gruppe.maxUsers;
+
             progressBar.style.width = '0%'; // Reset before animation
             setTimeout(() => { // Start animation after reset
                 progressBar.style.width = `${percentage}%`;
@@ -131,31 +137,38 @@ const createUserCountContainer = async (gruppe, userId) => {
     return userCountContainer;
 };
 
-
-const createActionButton = (gruppe, groupsOfUser, userId) => {
-    // Implementation of action button creation
+const createActionButton = (gruppe, groupsOfUser, userId, userCountContainer) => {
     const actionButton = document.createElement("button");
-    // Further implementation here...
+    // Retrieve user count and max users from the userCountContainer data attributes
+    const userCount = parseInt(userCountContainer.dataset.userCount);
+    const maxUsers = parseInt(userCountContainer.dataset.maxUsers);
+    const isFull = userCount >= maxUsers;
+
     if (groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
         actionButton.innerHTML = '<i class="bi bi-box-arrow-right"></i> Verlassen';
         actionButton.classList.add("button-verlassen");
-        actionButton.addEventListener('click', () => {
-            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
+        actionButton.addEventListener('click', (event) => {
+            event.stopPropagation();
             leaveGroup(gruppe.groupID);
         });
-    } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID) {
+    } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID && !isFull) {
         actionButton.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Beitreten';
         actionButton.classList.add("button-beitreten");
-        actionButton.addEventListener('click', () => {
-            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
-
+        actionButton.addEventListener('click', (event) => {
+            event.stopPropagation();
             joinGroup(gruppe.groupID);
         });
+    } else if (!groupsOfUser.includes(gruppe.groupID) && userId != gruppe.ownerID && isFull) {
+        actionButton.disabled = true;
+        actionButton.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Beitreten';
+        actionButton.classList.add("button-beitreten", "disabled");
+        // Hide the button if the group is full 
+        actionButton.style.display = 'none';
     } else if (userId == gruppe.ownerID) {
         actionButton.innerHTML = '<i class="bi bi-x-lg"></i> Auflösen';
         actionButton.classList.add("button-aufloesen");
-        actionButton.addEventListener('click', () => {
-            event.stopPropagation(); // Prevent click event from bubbling to the parent elements
+        actionButton.addEventListener('click', (event) => {
+            event.stopPropagation();
             deleteGroup(gruppe.groupID);
         });
     }

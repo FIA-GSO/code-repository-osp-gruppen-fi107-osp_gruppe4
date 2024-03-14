@@ -1012,32 +1012,31 @@ const deleteGroup = async (groupId) => {
     }
 };
 
+let cookieBanner = document.getElementById("cb-cookie-banner");
 function checkCookieConsent() {
-    var cookieDiv = document.getElementById('cb-cookie-banner')
     var consent = localStorage.getItem('cookieConsentLBV');
     console.log(consent)
-        if (consent == true) {
-            hideCookieBanner();
-        } else if (consent === null) {
-            showCookieBanner();
+        if (consent !== 'true') {
+        cookieBanner.classList.add("alert", "alert-dark", "text-center", "mb-0");
+        const Datenschutzlink = document.createElement('a');
+        Datenschutzlink.href = "/datenschutz";
+        Datenschutzlink.innerHTML = 'Datenschutzerklärung';
+        const okButton = document.createElement("button");
+        okButton.classList.add("btn", "btn-primary", "btn-sm", "ms-3");
+        okButton.innerHTML = "Alles klar!";
+        okButton.addEventListener('click', function() {
+            window.cb_hideCookieBanner();
+        })
+        cookieBanner.innerHTML = "🍪🛠️ Diese Webseite nutzt ausschließlich technisch notwendige Cookies. Weitere Informationen finden Sie in unserer ";
+        cookieBanner.appendChild(Datenschutzlink);
+        cookieBanner.appendChild(okButton);
         }
 }
 
-function showCookieBanner() {
-    let cookieBanner = document.getElementById("cb-cookie-banner");
-    cookieBanner.style.display = "block";
-}
 
 function hideCookieBanner() {
     localStorage.setItem("cookieConsentLBV", true);
-    let cookieBanner = document.getElementById("cb-cookie-banner");
     cookieBanner.style.display = "none";
 }
 
-function initializeCookieBanner() {
-    //showCookieBanner();
-    checkCookieConsent();
-}
-
-//window.onload = initializeCookieBanner();
 window.cb_hideCookieBanner = hideCookieBanner;

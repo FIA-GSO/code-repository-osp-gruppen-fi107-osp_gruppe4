@@ -2,7 +2,6 @@ Flask
 Flask-Bcrypt
 Flask-JWT-Extended
 Flask-SQLAlchemy
-Flask-
 python-dotenv
 requests
 SQLAlchemy

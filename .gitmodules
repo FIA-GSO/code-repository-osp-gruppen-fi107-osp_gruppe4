@@ -1,0 +1,3 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/FIA-GSO/code-repository-osp-gruppen-fi107-osp_gruppe4.git

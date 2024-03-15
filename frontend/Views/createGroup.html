@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/dashboard.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='CSS/HeaderFooter.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/createGroup.css') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='media/favicon.ico') }}">
   <title>LBV - Gruppen</title>
   <style>
@@ -49,50 +50,13 @@
 
       </div>
     </nav>
+
   </header>
 
 
 
 
   <main>
-
-    <style>
-      /* Better leave this here .... */
-      .form-card {
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        width: 35rem;
-        margin: auto;
-        padding: 40px;
-      }
-
-      .form-info h2 {
-        margin-bottom: 20px;
-      }
-
-      .form-input {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      }
-
-      .form-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-
-      }
-
-      .delete-button {
-        display: block;
-        margin: auto;
-        margin-top: 20px;
-      }
-    </style>
-
     <div class="form-card">
       <div class="form-info">
         <h2>Neue Gruppe erstellen</h2>
@@ -217,7 +181,7 @@
 
   <footer class="container p-3 mb-3 " id="footer">
     <!--headerfooter.js füllt den footer-->
-</footer>
+  </footer>
 
 
   <script>    function toggleDropdown() {

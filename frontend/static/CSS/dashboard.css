@@ -295,3 +295,30 @@
 #idList {
   margin-bottom: 0;
 }
+
+
+
+/* Media query for screens smaller than 768px */
+@media (max-width: 768px) {
+  .gruppen-info {
+    width: 100%; /* Take full width */
+    padding: 15px; /* Adjust padding */
+    margin-bottom: 15px; /* Adjust margin */
+  }
+
+  .gruppen-info h3 {
+    font-size: 18px; /* Adjust font size for smaller screens */
+  }
+
+  .gruppen-info p {
+    font-size: 14px; /* Adjust font size for smaller screens */
+    margin-bottom: 15px; /* Adjust spacing */
+    max-width: 100%; /* Use full container width */
+  }
+
+  .gruppen-info button {
+    font-size: 14px; /* Adjust button font size */
+    padding: 8px 16px; /* Adjust button padding */
+  }
+}
+

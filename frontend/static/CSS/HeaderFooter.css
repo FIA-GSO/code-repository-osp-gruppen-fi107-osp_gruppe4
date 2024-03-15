@@ -100,3 +100,29 @@ nav a:hover {
 .create-group-btn:active {
   text-decoration: none;
 }
+
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .logo-container img {
+    width: 50px;
+  }
+
+  nav a {
+    margin: 5px;
+    font-size: 14px;
+  }
+
+  #profilePicture {
+    height: 40px;
+    width: 40px;
+  }
+
+  .impressum-link {
+    font-size: 14px;
+  }
+}

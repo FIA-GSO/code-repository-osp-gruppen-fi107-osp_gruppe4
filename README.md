@@ -88,3 +88,9 @@ Zugangsdaten: admin@admin.admin - admin
 
     python frontend/app.py
     ```
+
+## Dokumentation
+
+Eine ausführliche Dokumentation der REST-API finden Sie [hier](https://github.com/jexxme/groupManagementAPI/blob/main/readme.md).
+
+Der Frontend-Code ist durch Inline-Kommentare dokumentiert.
